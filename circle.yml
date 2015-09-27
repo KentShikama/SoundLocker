@@ -23,6 +23,10 @@ test:
     # wait for it to have booted
     - circle-android wait-for-boot
     # Unlock screen
+    - sleep 5
     - adb shell input keyevent 82
-    # run tests  against the emulator.
+    - sleep 5
+    - adb shell input touchscreen swipe 370 735 371 735
+    - sleep 5
+    # run tests against the emulator.
     - ./gradlew connectedAndroidTest
