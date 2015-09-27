@@ -4,7 +4,7 @@
 
 general:
     artifacts:
-        - /home/ubuntu/soundlocker/app/build/outputs/apk/
+        - /home/ubuntu/SoundLocker/app/build/outputs/apk/
 
 machine:
     environment:
@@ -16,6 +16,16 @@ dependencies:
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
-    override:
-        - (./gradlew assemble):
-            timeout: 360
+  override:
+    # start the emulator
+    - emulator -avd circleci-android22 -no-audio -no-window:
+        background: true
+        parallel: true
+    # wait for it to have booted
+    - circle-android wait-for-boot
+    # run tests  against the emulator.
+    - ./gradlew connectedAndroidTest
+    # copy the build outputs to artifacts
+    - cp -r SoundLocker/build/outputs $CIRCLE_ARTIFACTS
+    # copy the test results to the test results directory.
+    - cp -r SoundLocker/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
