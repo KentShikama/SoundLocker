@@ -9,8 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -23,11 +25,19 @@ public class HelloWorldTest {
     @Test
     public void listGoesOverTheFold() {
         onView(withText("Welcome to SoundLocker!")).check(matches(isDisplayed()));
-    }
 
-    public void generatePassword(){
-        onView(withId(R.id.my_view))            // withId(R.id.my_view) is a ViewMatcher
+        onView(withId(R.id.genPass))            // withId(R.id.my_view) is a ViewMatcher
                 .perform(click())               // click() is a ViewAction
                 .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
+        onView(withText("This is a test password.")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.chooseSong))            // withId(R.id.my_view) is a ViewMatcher
+                .perform(click())               // click() is a ViewAction
+                .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
+
+        onView(withId(R.id.copy))            // withId(R.id.my_view) is a ViewMatcher
+                .perform(click())               // click() is a ViewAction
+                .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
+
     }
 }
