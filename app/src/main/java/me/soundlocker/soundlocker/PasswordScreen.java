@@ -1,9 +1,13 @@
 package me.soundlocker.soundlocker;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 public class PasswordScreen extends Activity {
 
@@ -33,5 +37,21 @@ public class PasswordScreen extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /** Called when the user clicks the Generate button */
+    public void displayPassword(View view) {
+        TextView tv = (TextView)findViewById(R.id.textView);
+        tv.setText("This is a test password.");
+    }
+
+    /** Called when users clicks the Copy to Clipboard button. Will take text from textView and copy. */
+    public void copyToClipboard(View view){
+        TextView tv = (TextView)findViewById(R.id.textView);
+        String text = tv.getText().toString();
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("label", text);
+        clipboard.setPrimaryClip(clip);
     }
 }

@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">SoundLocker</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="siteName">Facebook.com</string>
     <string name="action_settings">Settings</string>
+
+    <string name="generate">Generate Password</string>
+    <string name="copy">Copy to Clipboard</string>
+    <string name="chooseSong">Choose Song</string>
+    <string name="webview">Open WebView</string>
+    <string name="pwLength">Password Length: </string>
+
 </resources>
