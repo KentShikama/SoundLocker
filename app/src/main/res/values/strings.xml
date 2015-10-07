@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SoundLocker</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Welcome to SoundLocker!</string>
     <string name="action_settings">Settings</string>
 
     <string name="generate">Generate Password</string>

@@ -22,6 +22,12 @@ public class HelloWorldTest {
 
     @Test
     public void listGoesOverTheFold() {
-        onView(withText("Hello world!")).check(matches(isDisplayed()));
+        onView(withText("Welcome to SoundLocker!")).check(matches(isDisplayed()));
+    }
+
+    public void generatePassword(){
+        onView(withId(R.id.my_view))            // withId(R.id.my_view) is a ViewMatcher
+                .perform(click())               // click() is a ViewAction
+                .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
     }
 }
