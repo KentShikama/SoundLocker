@@ -3,20 +3,17 @@ package me.soundlocker.soundlocker;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class PasswordScreen extends Activity {
 
@@ -56,48 +53,39 @@ public class PasswordScreen extends Activity {
     }
 
     private String generatePassword() {
-        // Song's id
-        long songId = 1;
-        // Title of the song for password
-        String songTitle = "";
-        // Read in user's music
-        ContentResolver contentResolver = getContentResolver();
-        Uri uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = contentResolver.query(uri, null, null, null, null);
-        if (cursor == null) {
-            // Query failed, handle error.
-        } else if (!cursor.moveToFirst()) {
-            // No media on the device
-        } else {
-            int titleColumn = cursor.getColumnIndex(android.provider.MediaStore.Audio.Media.TITLE);
-            int idColumn = cursor.getColumnIndex(android.provider.MediaStore.Audio.Media._ID);
-            // Loop through all songs (TODO: Refactor as this is unnecessary)
-            do {
-                songId = cursor.getLong(idColumn);
-                songTitle = cursor.getString(titleColumn);
-            } while (cursor.moveToNext());
-        }
-        Uri contentUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId);
-        try {
-            InputStream fileInputStream= getContentResolver().openInputStream(contentUri);
-            byte[] result = inputStreamToByteArray(fileInputStream);
-            return String.valueOf(result[0]) + String.valueOf(result[1]) + String.valueOf(result[2]);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        URL url = buildURL();
+        DownloadSongByteData task = new DownloadSongByteData();
+        task.execute(url);
+        Byte[] songByteData = getSongByteData(task);
+        String password = hash(ArrayUtils.toPrimitive(songByteData));
+        return password;
     }
 
-    private byte[] inputStreamToByteArray(InputStream inStream) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[8192];
-        int bytesRead;
-        while ((bytesRead = inStream.read(buffer)) > 0) {
-            baos.write(buffer, 0, bytesRead);
+    private Byte[] getSongByteData(DownloadSongByteData task) {
+        Byte[] songByteData = new Byte[0];
+        try {
+            songByteData = task.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-        return baos.toByteArray();
+        return songByteData;
+    }
+
+    // TODO: Implement real hash function
+    private String hash(byte[] result) {
+        return String.valueOf(result[0]) + String.valueOf(result[1]) + String.valueOf(result[2]);
+    }
+
+    private URL buildURL() {
+        URL url = null;
+        try {
+            url = new URL("https://p.scdn.co/mp3-preview/6af04a222889b42239a867b0c9991e7fdc599762");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 
     /** Called when users clicks the Copy to Clipboard button. Will take text from textView and copy. */
