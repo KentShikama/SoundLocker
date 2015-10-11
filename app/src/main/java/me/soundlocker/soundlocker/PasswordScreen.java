@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -45,11 +46,21 @@ public class PasswordScreen extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /** Called when the user clicks the Generate button */
+    /**
+     * Called when the user clicks the Generate Password button
+     * @param view
+     */
     public void displayPassword(View view) {
         String password = generatePassword();
-        TextView tv = (TextView)findViewById(R.id.textView);
-        tv.setText(password);
+        int passwordLength = getPasswordLength();
+        TextView tv = (TextView) findViewById(R.id.textView);
+        tv.setText(password.substring(0, Math.min(6, passwordLength)));
+    }
+
+    private int getPasswordLength() {
+        EditText passwordLengthField = (EditText) findViewById(R.id.passwordLength);
+        String passwordLengthString = passwordLengthField.getText().toString();
+        return Integer.valueOf(passwordLengthString);
     }
 
     private String generatePassword() {
