@@ -60,7 +60,11 @@ public class PasswordScreen extends Activity {
     private int getPasswordLength() {
         EditText passwordLengthField = (EditText) findViewById(R.id.passwordLength);
         String passwordLengthString = passwordLengthField.getText().toString();
-        return Integer.valueOf(passwordLengthString);
+        if (passwordLengthString.isEmpty()) {
+            return 5;
+        } else {
+            return Integer.valueOf(passwordLengthString);
+        }
     }
 
     private String generatePassword() {
