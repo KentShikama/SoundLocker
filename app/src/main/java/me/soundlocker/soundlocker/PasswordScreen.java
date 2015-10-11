@@ -17,8 +17,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class PasswordScreen extends Activity {
+
+    private int passLength = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,13 +86,65 @@ public class PasswordScreen extends Activity {
         try {
             InputStream fileInputStream= getContentResolver().openInputStream(contentUri);
             byte[] result = inputStreamToByteArray(fileInputStream);
-            return String.valueOf(result[0]) + String.valueOf(result[1]) + String.valueOf(result[2]);
+            byte[] hashedResult = hashSongData(result);
+            String password = bytesToHex(hashedResult);
+            return password.substring(0,passLength);
+            //return String.valueOf(hashedResult[0]) + String.valueOf(hashedResult[1]) + String.valueOf(hashedResult[2]);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //parameter: the byte[] from the song
+    //return: byte[] created hashing song bytes
+    private byte[] hashSongData(byte[] data) {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        //String text = "This is some text";
+
+        md.update(data); // Change this to "UTF-16" if needed
+        byte[] passBytes = md.digest();
+        return passBytes;
+    }
+
+
+    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+    //parameter: the byte[] generated using hash
+    //output: string of correc lenght of first i elements
+    private String hashToString (byte[] hashData){
+        String result = null; // for UTF-8 encoding
+        for (int i =0; i<hashData.length; i++){
+
+        }
+        try {
+            result = new String(hashData, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+//        for (int i = 0; i<passLength; i++){
+//            String elt = String.valueOf(hashData[i]);
+//            result += elt.substring(1,elt.length() -1);
+//        }
+//        return result;
     }
 
     private byte[] inputStreamToByteArray(InputStream inStream) throws IOException {
@@ -99,6 +156,7 @@ public class PasswordScreen extends Activity {
         }
         return baos.toByteArray();
     }
+
 
     /** Called when users clicks the Copy to Clipboard button. Will take text from textView and copy. */
     public void copyToClipboard(View view){
