@@ -8,6 +8,6 @@
     <string name="copy">Copy to Clipboard</string>
     <string name="chooseSong">Choose Song</string>
     <string name="webview">Open WebView</string>
-    <string name="pwLength">Password Length: </string>
+    <string name="pwLength">Password Length</string>
 
 </resources>
