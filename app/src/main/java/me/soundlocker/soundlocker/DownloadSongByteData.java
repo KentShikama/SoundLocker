@@ -1,12 +1,14 @@
 package me.soundlocker.soundlocker;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -14,6 +16,12 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 public class DownloadSongByteData extends AsyncTask<URL, Integer, Byte[]> {
+
+    private Activity activity;
+
+    public DownloadSongByteData(Activity activity) {
+        this.activity = activity;
+    }
 
     @Override
     protected Byte[] doInBackground(URL... params) {
@@ -24,14 +32,28 @@ public class DownloadSongByteData extends AsyncTask<URL, Integer, Byte[]> {
             InputStream fileInputStream = new BufferedInputStream(urlConnection.getInputStream());
             byte[] result = inputStreamToByteArray(fileInputStream);
             return ArrayUtils.toObject(result);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("IOException", e.getMessage());
         } finally {
             urlConnection.disconnect();
         }
         return null;
+    }
+
+    protected void onPostExecute(Byte[] result) {
+        if (result == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle("No Internet Connection");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setMessage("Please check your Wifi settings\n");
+            builder.setPositiveButton("Ok", null);
+            final AlertDialog alert = builder.create();
+            activity.runOnUiThread(new java.lang.Runnable() {
+                public void run() {
+                    alert.show();
+                }
+            });
+        }
     }
 
     private byte[] inputStreamToByteArray(InputStream inStream) throws IOException {

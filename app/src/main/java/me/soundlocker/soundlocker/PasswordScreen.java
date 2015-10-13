@@ -69,11 +69,15 @@ public class PasswordScreen extends Activity {
 
     private String generatePassword() {
         URL url = buildURL();
-        DownloadSongByteData task = new DownloadSongByteData();
+        DownloadSongByteData task = new DownloadSongByteData(this);
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
-        String password = hash(ArrayUtils.toPrimitive(songByteData));
-        return password;
+        if (songByteData == null) {
+            return "--------------";
+        } else {
+            String password = hash(ArrayUtils.toPrimitive(songByteData));
+            return password;
+        }
     }
 
     private Byte[] getSongByteData(DownloadSongByteData task) {
