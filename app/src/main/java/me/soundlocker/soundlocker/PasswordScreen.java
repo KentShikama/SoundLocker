@@ -14,6 +14,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 
 public class PasswordScreen extends Activity {
@@ -92,9 +94,46 @@ public class PasswordScreen extends Activity {
         return songByteData;
     }
 
-    // TODO: Implement real hash function
-    private String hash(byte[] result) {
-        return String.valueOf(result[0]) + String.valueOf(result[1]) + String.valueOf(result[2]);
+    /**
+     * @param data the byte[] from the song
+     * @return byte[] created hashing song bytes
+     */
+    private String hash(byte[] data) {
+        byte[] passBytes = hash256(data);
+        String password = bytesToString(passBytes);
+        return password;
+    }
+
+    private byte[] hash256(byte[] data) {
+        MessageDigest md = getMessageDigest();
+        md.update(data);
+        byte[] passBytes = md.digest();
+        return passBytes;
+    }
+
+    private MessageDigest getMessageDigest() {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return md;
+    }
+
+    /**
+     * @param bytes - the byte array generated using hash
+     * @return the array displayed as a hex string
+     */
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    private static String bytesToString(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
     private URL buildURL() {
