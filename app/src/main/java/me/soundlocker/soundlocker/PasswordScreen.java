@@ -89,7 +89,6 @@ public class PasswordScreen extends Activity {
             byte[] hashedResult = hashSongData(result);
             String password = bytesToHex(hashedResult);
             return password.substring(0,passLength);
-            //return String.valueOf(hashedResult[0]) + String.valueOf(hashedResult[1]) + String.valueOf(hashedResult[2]);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -101,20 +100,25 @@ public class PasswordScreen extends Activity {
     //parameter: the byte[] from the song
     //return: byte[] created hashing song bytes
     private byte[] hashSongData(byte[] data) {
+        byte[] passBytes = hash256(data);
+        return passBytes;
+    }
+
+    private byte[] hash256(byte[] data) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        //String text = "This is some text";
 
-        md.update(data); // Change this to "UTF-16" if needed
+        md.update(data);
         byte[] passBytes = md.digest();
         return passBytes;
     }
 
-
+    //parameter: the byte array generated using hash
+    //return: the array displayed as a hex string 
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
@@ -126,12 +130,15 @@ public class PasswordScreen extends Activity {
         return new String(hexChars);
     }
     //parameter: the byte[] generated using hash
-    //output: string of correc lenght of first i elements
+    //output: string of correct length of first i elements
     private String hashToString (byte[] hashData){
-        String result = null; // for UTF-8 encoding
-        for (int i =0; i<hashData.length; i++){
+        String result = hashToStringHelper(hashData);
+        return result;
 
-        }
+    }
+
+    private String hashToStringHelper (byte[] hashData){
+        String result = null; // for UTF-8 encoding
         try {
             result = new String(hashData, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -140,11 +147,6 @@ public class PasswordScreen extends Activity {
 
         return result;
 
-//        for (int i = 0; i<passLength; i++){
-//            String elt = String.valueOf(hashData[i]);
-//            result += elt.substring(1,elt.length() -1);
-//        }
-//        return result;
     }
 
     private byte[] inputStreamToByteArray(InputStream inStream) throws IOException {
