@@ -15,11 +15,11 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class DownloadSongByteData extends AsyncTask<URL, Integer, Byte[]> {
+public class SongByteDataDownloader extends AsyncTask<URL, Integer, Byte[]> {
 
-    private Activity activity;
+    private final Activity activity;
 
-    public DownloadSongByteData(Activity activity) {
+    public SongByteDataDownloader(Activity activity) {
         this.activity = activity;
     }
 
@@ -33,7 +33,7 @@ public class DownloadSongByteData extends AsyncTask<URL, Integer, Byte[]> {
             byte[] result = inputStreamToByteArray(fileInputStream);
             return ArrayUtils.toObject(result);
         } catch (IOException e) {
-            Log.e("IOException", e.getMessage());
+            Log.e("SongByteDataDownloader", e.getMessage());
         } finally {
             urlConnection.disconnect();
         }

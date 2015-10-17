@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,10 +13,10 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class PasswordScreen extends Activity {
@@ -71,7 +72,7 @@ public class PasswordScreen extends Activity {
 
     private String generatePassword() {
         URL url = buildURL();
-        DownloadSongByteData task = new DownloadSongByteData(this);
+        SongByteDataDownloader task = new SongByteDataDownloader(this);
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
         if (songByteData == null) {
@@ -82,14 +83,14 @@ public class PasswordScreen extends Activity {
         }
     }
 
-    private Byte[] getSongByteData(DownloadSongByteData task) {
+    private Byte[] getSongByteData(SongByteDataDownloader task) {
         Byte[] songByteData = new Byte[0];
         try {
             songByteData = task.get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("PasswordScreen", e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e("PasswordScreen", e.getMessage());
         }
         return songByteData;
     }
@@ -116,7 +117,7 @@ public class PasswordScreen extends Activity {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e("PasswordScreen", e.getMessage());
         }
         return md;
     }
@@ -137,16 +138,41 @@ public class PasswordScreen extends Activity {
     }
 
     private URL buildURL() {
-        URL url = null;
-        try {
-            url = new URL("https://p.scdn.co/mp3-preview/6af04a222889b42239a867b0c9991e7fdc599762");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
+        String songName = buildSongName();
+        SongSearcher task = new SongSearcher();
+        task.execute(songName);
+        ArrayList<URL> urls = getSongUrls(task);
+        Log.e("PasswordScreen", urls.get(0).toString());
+        return urls.get(0);
     }
 
-    /** Called when users clicks the Copy to Clipboard button. Will take text from textView and copy. */
+    private String buildSongName() {
+        EditText passwordLengthField = (EditText) findViewById(R.id.chooseSong);
+        String passwordLengthString = passwordLengthField.getText().toString();
+        String songName = "";
+        if (passwordLengthString.isEmpty()) {
+            songName = "native";
+        } else {
+            songName = passwordLengthString;
+        } return songName;
+    }
+
+    private ArrayList<URL> getSongUrls(SongSearcher task) {
+        ArrayList<URL> urls = null;
+        try {
+            urls = task.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return urls;
+    }
+
+    /**
+     * Called when users clicks the Copy to Clipboard button. Will take text from textView and copy.
+     * @param view
+     */
     public void copyToClipboard(View view){
         TextView tv = (TextView)findViewById(R.id.textView);
         String text = tv.getText().toString();
