@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.net.URL;
 import java.security.MessageDigest;
@@ -141,9 +142,8 @@ public class PasswordScreen extends Activity {
         String songName = buildSongName();
         SongSearcher task = new SongSearcher();
         task.execute(songName);
-        ArrayList<URL> urls = getSongUrls(task);
-        Log.e("PasswordScreen", urls.get(0).toString());
-        return urls.get(0);
+        ArrayList<ImmutablePair<URL, URL>> urls = getSongUrls(task);
+        return urls.get(0).getLeft();
     }
 
     private String buildSongName() {
@@ -157,8 +157,8 @@ public class PasswordScreen extends Activity {
         } return songName;
     }
 
-    private ArrayList<URL> getSongUrls(SongSearcher task) {
-        ArrayList<URL> urls = null;
+    private ArrayList<ImmutablePair<URL, URL>> getSongUrls(SongSearcher task) {
+        ArrayList<ImmutablePair<URL, URL>> urls = null;
         try {
             urls = task.get();
         } catch (InterruptedException e) {

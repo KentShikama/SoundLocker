@@ -15,7 +15,12 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class SongByteDataDownloader extends AsyncTask<URL, Integer, Byte[]> {
+/**
+ * Task for downloading a song URL.
+ *
+ * The task returns an array of Bytes representing the song.
+ */
+class SongByteDataDownloader extends AsyncTask<URL, Integer, Byte[]> {
 
     private final Activity activity;
 

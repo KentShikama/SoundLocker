@@ -3,6 +3,7 @@ package me.soundlocker.soundlocker;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,19 +17,22 @@ import static junit.framework.Assert.assertEquals;
 @LargeTest
 public class SongSearcherTest {
 
-    private static final String NATIVE_URL_STRING =
+    private static final String NATIVE_PREVIEW_URL_STRING =
             "https://p.scdn.co/mp3-preview/c58cd3ffb9e61ad38cde7658f436b4245cfd2666";
+    private static final String NATIVE_IMAGE_URL_STRING =
+            "https://i.scdn.co/image/45b8542038b3b21e392ffead938153448c68ab1d";
 
     @Test
     public void readNativeByOneRepublicSong() {
         SongSearcher task = new SongSearcher();
         task.execute("native");
-        ArrayList<URL> urls = getSongUrls(task);
-        assertEquals(urls.get(0).toString(), NATIVE_URL_STRING);
+        ArrayList<ImmutablePair<URL, URL>> urls = getSongUrls(task);
+        assertEquals(urls.get(0).getLeft().toString(), NATIVE_PREVIEW_URL_STRING);
+        assertEquals(urls.get(0).getRight().toString(), NATIVE_IMAGE_URL_STRING);
     }
 
-    private ArrayList<URL> getSongUrls(SongSearcher task) {
-        ArrayList<URL> urls = null;
+    private ArrayList<ImmutablePair<URL, URL>> getSongUrls(SongSearcher task) {
+        ArrayList<ImmutablePair<URL, URL>> urls = null;
         try {
             urls = task.get();
         } catch (InterruptedException e) {
