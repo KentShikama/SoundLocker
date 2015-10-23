@@ -28,7 +28,7 @@ public class PasswordScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_password_screen);
+        // setContentView(R.layout.activity_password_screen);
     }
 
     @Override
