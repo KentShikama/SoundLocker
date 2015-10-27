@@ -11,6 +11,13 @@
     <string name="pwLength">Password Length</string>
     <string name="title_activity_list_view">Applications List</string>
 
+
+
+    <string name="title_application_adder">Add Applications</string>
+    <string name="application_name">Application Name</string>
+    <string name="add_application">Add Application</string>
+
+
     <string name="hello_world">Hello world!</string>
 
 </resources>

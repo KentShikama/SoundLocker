@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/applicationName"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center|bottom"
+        android:layout_weight="0"
+        android:hint="@string/application_name"
+        android:inputType="text"
+        android:textSize="20dp"
+        android:textColor="#ffffff" />
+    <Button
+        android:id="@+id/addApp"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="0"
+        android:onClick="displayPassword"
+        android:text="@string/add_application"
+        android:layout_gravity="center" />
+
+</LinearLayout>
