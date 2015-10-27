@@ -27,25 +27,16 @@ public class HelloWorldTest {
         onView(withText("Facebook.com")).check(matches(isDisplayed()));
     }
 
-    // TODO: Adjust to fit new password generation
-    //@Test
-    //public void checkGenPass() {
-        //onView(withId(R.id.genPass))            // withId(R.id.my_view) is a ViewMatcher
-        //        .perform(click())               // click() is a ViewAction
-        //        .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
-        //onView(withText("This is a test password.")).check(matches(isDisplayed()));
-    //}
-
     @Test
     public void checkChooseSong() {
-        onView(withId(R.id.chooseSong))            // withId(R.id.my_view) is a ViewMatcher
-                .perform(click())               // click() is a ViewAction
-                .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
+        onView(withId(R.id.chooseSong))             // withId(R.id.my_view) is a ViewMatcher
+                .perform(click())                   // click() is a ViewAction
+                .check(matches(isDisplayed()));     // matches(isDisplayed()) is a ViewAssertion
     }
 
     @Test
-    public void checkCopy(){
-        onView(withId(R.id.copy))            // withId(R.id.my_view) is a ViewMatcher
+    public void checkCopy() {
+        onView(withId(R.id.copy))               // withId(R.id.my_view) is a ViewMatcher
                 .perform(click())               // click() is a ViewAction
                 .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
     }
