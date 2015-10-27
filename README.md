@@ -1,8 +1,21 @@
-## What is SoundLocker?
+#What is SoundLocker?
 
-A password manager that is based off of songs.
+SoundLocker is an open-source password manager Android app that generates passwords based off of songs.
 
-## Is SoundLocker Secure and Risk-Free?
+#Why SoundLocker?
+
+Remembering passwords is a hassle and requires the user to remember random digits and letters. However, what often ends up happening is that either the same password is used on multiple sites which is definitely insecure or the passwords themselves are insecure. 
+
+Password managers such as LastPass theoretically provide a great service but ultimately they are still a third-party services that users have to put their trust into. In addition, their systems have been compromised before so who is to say that it would not happen again, this time with more catastrophic effects.
+
+SoundLocker is different. SoundLocker relies on your ability to associate songs to applications not your trust in third-parties or your ability to memorize hard to remember letters and numbers. All of our code is open-sourced so as a user you’ll always know what is going on behind the scenes. Our password generation algorithm is as secure as you can get given the password length you specify. We do not store any of your passwords, locally or remotely.
+
+# How does SoundLocker Work?
+
+Need a new password to sign up for a new application? Choose a song. Press generate password. And insert the password into the application. Want to log into the same application later? Simple. Choose the same song. Press generate password. And insert the password into the application again. Want a different password for a different application? Choose a different song. Press generate password. And insert the password into the different application. Simple right?
+You can choose any song from the 30 million available songs on Spotify. You can optionally specify your desired password length or whether you want special characters. We can optionally encrypt based off your device so that you know your password you generate will not be replicable by other devices.
+
+# Is SoundLocker Secure and Risk-Free?
 
 Short answer: Moderately.
 
