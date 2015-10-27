@@ -16,10 +16,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class UITest {
+public class HelloWorldTest {
 
     @Rule
     public ActivityTestRule<PasswordScreen> mActivityRule = new ActivityTestRule(PasswordScreen.class);
+
+    @Test
+    public void checkSelectedAppNameDisplayed() {
+        onView(withId(R.id.textView))
+                .check(matches(isDisplayed()));
+    }
 
     @Test
     public void checkChooseSong() {
