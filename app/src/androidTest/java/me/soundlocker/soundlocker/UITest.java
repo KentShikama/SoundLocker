@@ -13,19 +13,13 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class HelloWorldTest {
+public class UITest {
 
     @Rule
     public ActivityTestRule<PasswordScreen> mActivityRule = new ActivityTestRule(PasswordScreen.class);
-
-    @Test
-    public void listGoesOverTheFold() {
-        onView(withText("Facebook.com")).check(matches(isDisplayed()));
-    }
 
     @Test
     public void checkChooseSong() {

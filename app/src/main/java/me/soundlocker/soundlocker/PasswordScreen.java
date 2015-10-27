@@ -14,7 +14,9 @@ import android.widget.TextView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -139,14 +141,24 @@ public class PasswordScreen extends Activity {
     }
 
     private URL buildURL() {
-        String songName = buildSongName();
+        String songName = buildURLSafeSongName();
         SongSearcher task = new SongSearcher();
         task.execute(songName);
         ArrayList<ImmutablePair<URL, URL>> urls = getSongUrls(task);
         return urls.get(0).getLeft();
     }
 
-    private String buildSongName() {
+    private String buildURLSafeSongName() {
+        String songName = null;
+        try {
+            songName = buildSongName();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return songName;
+    }
+
+    private String buildSongName() throws UnsupportedEncodingException {
         EditText passwordLengthField = (EditText) findViewById(R.id.chooseSong);
         String passwordLengthString = passwordLengthField.getText().toString();
         String songName = "";
@@ -154,7 +166,8 @@ public class PasswordScreen extends Activity {
             songName = "native";
         } else {
             songName = passwordLengthString;
-        } return songName;
+        }
+        return URLEncoder.encode(songName, "UTF-8");
     }
 
     private ArrayList<ImmutablePair<URL, URL>> getSongUrls(SongSearcher task) {
