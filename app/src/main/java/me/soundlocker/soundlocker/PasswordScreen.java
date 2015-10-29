@@ -3,6 +3,7 @@ package me.soundlocker.soundlocker;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,11 +24,14 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class PasswordScreen extends Activity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_screen);
+        TextView title = (TextView) findViewById(R.id.textView);
+        Intent intent = getIntent();
+        String appName = intent.getStringExtra("app_name");
+        title.setText(appName);
     }
 
     @Override
