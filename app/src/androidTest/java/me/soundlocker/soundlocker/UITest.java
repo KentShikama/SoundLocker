@@ -22,6 +22,12 @@ public class UITest {
     public ActivityTestRule<PasswordScreen> mActivityRule = new ActivityTestRule(PasswordScreen.class);
 
     @Test
+    public void checkSelectedAppNameDisplayed() {
+        onView(withId(R.id.textView))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
     public void checkChooseSong() {
         onView(withId(R.id.chooseSong))             // withId(R.id.my_view) is a ViewMatcher
                 .perform(click())                   // click() is a ViewAction
