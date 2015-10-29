@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,11 +12,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import java.net.MalformedURLException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class PasswordScreen extends Activity {
@@ -71,7 +75,7 @@ public class PasswordScreen extends Activity {
 
     private String generatePassword() {
         URL url = buildURL();
-        DownloadSongByteData task = new DownloadSongByteData(this);
+        SongByteDataDownloader task = new SongByteDataDownloader(this);
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
         if (songByteData == null) {
@@ -82,14 +86,14 @@ public class PasswordScreen extends Activity {
         }
     }
 
-    private Byte[] getSongByteData(DownloadSongByteData task) {
+    private Byte[] getSongByteData(SongByteDataDownloader task) {
         Byte[] songByteData = new Byte[0];
         try {
             songByteData = task.get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e("PasswordScreen", e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e("PasswordScreen", e.getMessage());
         }
         return songByteData;
     }
@@ -116,7 +120,7 @@ public class PasswordScreen extends Activity {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e("PasswordScreen", e.getMessage());
         }
         return md;
     }
@@ -137,16 +141,51 @@ public class PasswordScreen extends Activity {
     }
 
     private URL buildURL() {
-        URL url = null;
-        try {
-            url = new URL("https://p.scdn.co/mp3-preview/6af04a222889b42239a867b0c9991e7fdc599762");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
+        String songName = buildURLSafeSongName();
+        SongSearcher task = new SongSearcher();
+        task.execute(songName);
+        ArrayList<ImmutablePair<URL, URL>> urls = getSongUrls(task);
+        return urls.get(0).getLeft();
     }
 
-    /** Called when users clicks the Copy to Clipboard button. Will take text from textView and copy. */
+    private String buildURLSafeSongName() {
+        String songName = null;
+        try {
+            songName = buildSongName();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return songName;
+    }
+
+    private String buildSongName() throws UnsupportedEncodingException {
+        EditText passwordLengthField = (EditText) findViewById(R.id.chooseSong);
+        String passwordLengthString = passwordLengthField.getText().toString();
+        String songName = "";
+        if (passwordLengthString.isEmpty()) {
+            songName = "native";
+        } else {
+            songName = passwordLengthString;
+        }
+        return URLEncoder.encode(songName, "UTF-8");
+    }
+
+    private ArrayList<ImmutablePair<URL, URL>> getSongUrls(SongSearcher task) {
+        ArrayList<ImmutablePair<URL, URL>> urls = null;
+        try {
+            urls = task.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return urls;
+    }
+
+    /**
+     * Called when users clicks the Copy to Clipboard button. Will take text from textView and copy.
+     * @param view
+     */
     public void copyToClipboard(View view){
         TextView tv = (TextView)findViewById(R.id.textView);
         String text = tv.getText().toString();
