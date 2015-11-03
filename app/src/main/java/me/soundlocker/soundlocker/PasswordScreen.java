@@ -79,6 +79,14 @@ public class PasswordScreen extends Activity {
 
     private String generatePassword() {
         URL url = buildURL();
+        if (url == null) {
+            return "--------------";
+        } else {
+            return generatePasswordForNotNullURL(url);
+        }
+    }
+
+    private String generatePasswordForNotNullURL(URL url) {
         SongByteDataDownloader task = new SongByteDataDownloader(this);
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
@@ -146,10 +154,14 @@ public class PasswordScreen extends Activity {
 
     private URL buildURL() {
         String songName = buildURLSafeSongName();
-        SongSearcher task = new SongSearcher();
+        SongSearcher task = new SongSearcher(this);
         task.execute(songName);
         ArrayList<ImmutablePair<URL, URL>> urls = getSongUrls(task);
-        return urls.get(0).getLeft();
+        if (urls == null) {
+            return null;
+        } else {
+            return urls.get(0).getLeft();
+        }
     }
 
     private String buildURLSafeSongName() {
