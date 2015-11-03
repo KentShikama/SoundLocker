@@ -24,7 +24,7 @@ public class SongSearcherTest {
 
     @Test
     public void readNativeByOneRepublicSong() {
-        SongSearcher task = new SongSearcher();
+        SongSearcher task = new SongSearcher(null);
         task.execute("native ");
         ArrayList<ImmutablePair<URL, URL>> urls = getSongUrls(task);
         assertEquals(urls.get(0).getLeft().toString(), NATIVE_PREVIEW_URL_STRING);

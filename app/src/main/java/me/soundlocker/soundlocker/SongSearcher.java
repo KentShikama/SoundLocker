@@ -1,5 +1,7 @@
 package me.soundlocker.soundlocker;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.util.JsonReader;
 import android.util.Log;
@@ -28,11 +30,33 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
     private static final String TAG = "SongSearcher";
     private static final String SPOTIFY_API_SEARCH_ENDPOINT = "https://api.spotify.com/v1/search";
 
+    private final Activity activity;
+
+    public SongSearcher(Activity activity) {
+        this.activity = activity;
+    }
+
     @Override
     protected ArrayList<ImmutablePair<URL, URL>> doInBackground(String... params) {
         URL url = getUrlFromParams(params);
         ArrayList<ImmutablePair<URL, URL>> previewUrls = readPreviewUrls(url);
         return previewUrls;
+    }
+
+    protected void onPostExecute(ArrayList<ImmutablePair<URL, URL>> result) {
+        if (result == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle("No Internet Connection");
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setMessage("Please check your Wifi settings\n");
+            builder.setPositiveButton("Ok", null);
+            final AlertDialog alert = builder.create();
+            activity.runOnUiThread(new java.lang.Runnable() {
+                public void run() {
+                    alert.show();
+                }
+            });
+        }
     }
 
     private ArrayList<ImmutablePair<URL, URL>> readPreviewUrls(URL url) {
@@ -45,6 +69,7 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
             readSearchJSON(previewUrls, reader);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
+            return null;
         } finally {
             urlConnection.disconnect();
         }
