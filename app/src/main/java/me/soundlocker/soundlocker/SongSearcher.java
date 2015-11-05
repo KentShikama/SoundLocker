@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -24,9 +25,9 @@ import javax.net.ssl.HttpsURLConnection;
  * The task returns an ArrayList of pairs of
  * 30 second preview URLs of the song and the album's image URL.
  */
-class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<URL, URL>>> {
+class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<String, URL, URL>>> {
 
-    private static final int SEARCH_RESULT_LIMIT = 3;
+    private static final int SEARCH_RESULT_LIMIT = 7;
     private static final String TAG = "SongSearcher";
     private static final String SPOTIFY_API_SEARCH_ENDPOINT = "https://api.spotify.com/v1/search";
 
@@ -37,13 +38,13 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
     }
 
     @Override
-    protected ArrayList<ImmutablePair<URL, URL>> doInBackground(String... params) {
+    protected ArrayList<ImmutableTriple<String, URL, URL>> doInBackground(String... params) {
         URL url = getUrlFromParams(params);
-        ArrayList<ImmutablePair<URL, URL>> previewUrls = readPreviewUrls(url);
+        ArrayList<ImmutableTriple<String, URL, URL>> previewUrls = readPreviewUrls(url);
         return previewUrls;
     }
 
-    protected void onPostExecute(ArrayList<ImmutablePair<URL, URL>> result) {
+    protected void onPostExecute(ArrayList<ImmutableTriple<String, URL, URL>> result) {
         if (result == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle("No Internet Connection");
@@ -59,8 +60,8 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
         }
     }
 
-    private ArrayList<ImmutablePair<URL, URL>> readPreviewUrls(URL url) {
-        ArrayList<ImmutablePair<URL, URL>> previewUrls = new ArrayList<>(SEARCH_RESULT_LIMIT);
+    private ArrayList<ImmutableTriple<String, URL, URL>> readPreviewUrls(URL url) {
+        ArrayList<ImmutableTriple<String, URL, URL>> previewUrls = new ArrayList<>(SEARCH_RESULT_LIMIT);
         HttpsURLConnection urlConnection = null;
         try {
             urlConnection = (HttpsURLConnection) url.openConnection();
@@ -76,7 +77,7 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
         return previewUrls;
     }
 
-    private void readSearchJSON(ArrayList<ImmutablePair<URL, URL>> previewUrls, JsonReader reader) throws IOException {
+    private void readSearchJSON(ArrayList<ImmutableTriple<String, URL, URL>> previewUrls, JsonReader reader) throws IOException {
         reader.beginObject();
         String name = reader.nextName();
         if (name.equals("tracks")) {
@@ -87,7 +88,7 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
         reader.endObject();
     }
 
-    private void readTracks(ArrayList<ImmutablePair<URL, URL>> previewUrls, JsonReader reader) throws IOException {
+    private void readTracks(ArrayList<ImmutableTriple<String, URL, URL>> previewUrls, JsonReader reader) throws IOException {
         reader.beginObject();
         while (reader.hasNext()) {
             String itemName = reader.nextName();
@@ -100,7 +101,7 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
         reader.endObject();
     }
 
-    private void readItems(ArrayList<ImmutablePair<URL, URL>> previewUrls, JsonReader reader) throws IOException {
+    private void readItems(ArrayList<ImmutableTriple<String, URL, URL>> previewUrls, JsonReader reader) throws IOException {
         reader.beginArray();
         while (reader.hasNext()) {
             readItemContents(previewUrls, reader);
@@ -108,11 +109,12 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
         reader.endArray();
     }
 
-    private void readItemContents(ArrayList<ImmutablePair<URL, URL>> previewUrls, JsonReader reader) throws IOException {
+    private void readItemContents(ArrayList<ImmutableTriple<String, URL, URL>> previewUrls, JsonReader reader) throws IOException {
         ItemContentReader itemContentReader = new ItemContentReader(reader);
+        String songName = itemContentReader.getSongName();
         URL previewUrl = itemContentReader.getPreviewUrl();
         URL imageUrl = itemContentReader.getImageUrl();
-        previewUrls.add(new ImmutablePair<>(previewUrl, imageUrl));
+        previewUrls.add(new ImmutableTriple<>(songName, previewUrl, imageUrl));
     }
 
     private URL getUrlFromParams(String[] params) {
@@ -135,12 +137,17 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
      */
     class ItemContentReader {
         private JsonReader reader;
+        private String songName;
         private URL previewUrl;
         private URL imageUrl;
 
         ItemContentReader(JsonReader reader) throws IOException {
             this.reader = reader;
             readItemContent();
+        }
+
+        String getSongName() {
+            return songName;
         }
 
         URL getPreviewUrl() {
@@ -156,8 +163,18 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
             while (reader.hasNext()) {
                 String symbol = reader.nextName();
                 if (symbol.equals("preview_url")) {
-                    String previewUrlString = reader.nextString();
-                    previewUrl = new URL(previewUrlString);
+                    if (reader.peek() == JsonToken.STRING) {
+                        String previewUrlString = reader.nextString();
+                        previewUrl = new URL(previewUrlString);
+                    } else {
+                        reader.skipValue();
+                    }
+                } else if (symbol.equals("name")) {
+                    if (reader.peek() == JsonToken.STRING) {
+                        songName = reader.nextString();
+                    } else {
+                        reader.skipValue();
+                    }
                 } else if (symbol.equals("album")) {
                     readAlbum();
                 } else {
@@ -193,8 +210,12 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutablePair<UR
             while (reader.hasNext()) {
                 String imageSymbol = reader.nextName();
                 if (imageSymbol.equals("url")) {
-                    String imageUrlString = reader.nextString();
-                    assignImageURLIf640x640(imageUrlString);
+                    if (reader.peek() == JsonToken.STRING) {
+                        String imageUrlString = reader.nextString();
+                        assignImageURLIf640x640(imageUrlString);
+                    } else {
+                        reader.skipValue();
+                    }
                 } else {
                     reader.skipValue();
                 }

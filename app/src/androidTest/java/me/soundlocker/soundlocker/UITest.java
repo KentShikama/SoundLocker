@@ -28,13 +28,6 @@ public class UITest {
     }
 
     @Test
-    public void checkChooseSong() {
-        onView(withId(R.id.chooseSong))             // withId(R.id.my_view) is a ViewMatcher
-                .perform(click())                   // click() is a ViewAction
-                .check(matches(isDisplayed()));     // matches(isDisplayed()) is a ViewAssertion
-    }
-
-    @Test
     public void checkCopy() {
         onView(withId(R.id.copy))               // withId(R.id.my_view) is a ViewMatcher
                 .perform(click())               // click() is a ViewAction
