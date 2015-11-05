@@ -9,29 +9,40 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class PasswordScreen extends Activity {
+
+    private static final String TAG = "PasswordScreen";
+    private String previewUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_screen);
-        TextView title = (TextView) findViewById(R.id.textView);
+
         Intent intent = getIntent();
         String appName = intent.getStringExtra("app_name");
+        TextView title = (TextView) findViewById(R.id.textView);
         title.setText(appName);
+
+        String songName = intent.getStringExtra("song_name");
+        if (songName != null) {
+            Button chooseSongButton = (Button) findViewById(R.id.chooseSong);
+            chooseSongButton.setText(songName);
+        }
+
+        previewUrl = intent.getStringExtra("preview_url");
     }
 
     @Override
@@ -57,8 +68,15 @@ public class PasswordScreen extends Activity {
     }
 
     /**
+     * Called when the user clicks the Choose Song button
+     */
+    public void showSongPicker(View view) {
+        Intent intent = new Intent(this, SongPickerScreen.class);
+        startActivity(intent);
+    }
+
+    /**
      * Called when the user clicks the Generate Password button
-     * @param view
      */
     public void displayPassword(View view) {
         String password = generatePassword();
@@ -86,6 +104,19 @@ public class PasswordScreen extends Activity {
         }
     }
 
+    private URL buildURL() {
+        if (previewUrl == null) {
+            return null;
+        } else {
+            try {
+                return new URL(previewUrl);
+            } catch (MalformedURLException e) {
+                Log.e(TAG, e.getMessage());
+                return null;
+            }
+        }
+    }
+
     private String generatePasswordForNotNullURL(URL url) {
         SongByteDataDownloader task = new SongByteDataDownloader(this);
         task.execute(url);
@@ -103,9 +134,9 @@ public class PasswordScreen extends Activity {
         try {
             songByteData = task.get();
         } catch (InterruptedException e) {
-            Log.e("PasswordScreen", e.getMessage());
+            Log.e(TAG, e.getMessage());
         } catch (ExecutionException e) {
-            Log.e("PasswordScreen", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
         return songByteData;
     }
@@ -132,7 +163,7 @@ public class PasswordScreen extends Activity {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            Log.e("PasswordScreen", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
         return md;
     }
@@ -150,52 +181,6 @@ public class PasswordScreen extends Activity {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
-    }
-
-    private URL buildURL() {
-        String songName = buildURLSafeSongName();
-        SongSearcher task = new SongSearcher(this);
-        task.execute(songName);
-        ArrayList<ImmutablePair<URL, URL>> urls = getSongUrls(task);
-        if (urls == null) {
-            return null;
-        } else {
-            return urls.get(0).getLeft();
-        }
-    }
-
-    private String buildURLSafeSongName() {
-        String songName = null;
-        try {
-            songName = buildSongName();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return songName;
-    }
-
-    private String buildSongName() throws UnsupportedEncodingException {
-        EditText passwordLengthField = (EditText) findViewById(R.id.chooseSong);
-        String passwordLengthString = passwordLengthField.getText().toString();
-        String songName = "";
-        if (passwordLengthString.isEmpty()) {
-            songName = "native";
-        } else {
-            songName = passwordLengthString;
-        }
-        return URLEncoder.encode(songName, "UTF-8");
-    }
-
-    private ArrayList<ImmutablePair<URL, URL>> getSongUrls(SongSearcher task) {
-        ArrayList<ImmutablePair<URL, URL>> urls = null;
-        try {
-            urls = task.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return urls;
     }
 
     /**

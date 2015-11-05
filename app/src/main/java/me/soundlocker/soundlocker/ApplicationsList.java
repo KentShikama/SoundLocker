@@ -11,16 +11,14 @@ import java.util.ArrayList;
 
 public class ApplicationsList extends ListActivity {
     // LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
-    static ArrayList<String> listItems=new ArrayList<>();
-    // DEFINING A STRING ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
-    static ArrayAdapter<String> adapter;
-
+    private static ArrayList<String> listItems = new ArrayList<>();
+    private static ArrayAdapter<String> adapter;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_applications_list);
-        adapter=new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
         setListAdapter(adapter);
     }
 
@@ -32,7 +30,6 @@ public class ApplicationsList extends ListActivity {
     }
 
     public static void updateList(String str) {
-
         listItems.add(str);
         adapter.notifyDataSetChanged();
     }
