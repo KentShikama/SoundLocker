@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SoundLocker</string>
-
     <string name="siteName">Facebook.com</string>
     <string name="action_settings">Settings</string>
 
