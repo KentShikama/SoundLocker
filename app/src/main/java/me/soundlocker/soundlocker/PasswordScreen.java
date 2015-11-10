@@ -3,10 +3,13 @@ package me.soundlocker.soundlocker;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,10 +23,29 @@ import java.util.concurrent.ExecutionException;
 
 public class PasswordScreen extends Activity {
 
+    private static final String TAG = "PasswordScreen";
+    private String previewUrl;
+    private String appName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_screen);
+
+        Intent intent = getIntent();
+
+        appName = intent.getStringExtra("app_name");
+        TextView title = (TextView) findViewById(R.id.textView);
+
+        title.setText(appName);
+
+        String songName = intent.getStringExtra("song_name");
+        if (songName != null) {
+            Button chooseSongButton = (Button) findViewById(R.id.chooseSong);
+            chooseSongButton.setText(songName);
+        }
+
+        previewUrl = intent.getStringExtra("preview_url");
     }
 
     @Override
@@ -49,8 +71,15 @@ public class PasswordScreen extends Activity {
     }
 
     /**
+     * Called when the user clicks the Choose Song button
+     */
+    public void showSongPicker(View view) {
+        Intent intent = new Intent(this, SongPickerScreen.class);
+        startActivity(intent);
+    }
+
+    /**
      * Called when the user clicks the Generate Password button
-     * @param view
      */
     public void displayPassword(View view) {
         String password = generatePassword();
@@ -71,7 +100,28 @@ public class PasswordScreen extends Activity {
 
     private String generatePassword() {
         URL url = buildURL();
-        DownloadSongByteData task = new DownloadSongByteData(this);
+        if (url == null) {
+            return "--------------";
+        } else {
+            return generatePasswordForNotNullURL(url);
+        }
+    }
+
+    private URL buildURL() {
+        if (previewUrl == null) {
+            return null;
+        } else {
+            try {
+                return new URL(previewUrl);
+            } catch (MalformedURLException e) {
+                Log.e(TAG, e.getMessage());
+                return null;
+            }
+        }
+    }
+
+    private String generatePasswordForNotNullURL(URL url) {
+        SongByteDataDownloader task = new SongByteDataDownloader(this);
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
         if (songByteData == null) {
@@ -82,14 +132,14 @@ public class PasswordScreen extends Activity {
         }
     }
 
-    private Byte[] getSongByteData(DownloadSongByteData task) {
+    private Byte[] getSongByteData(SongByteDataDownloader task) {
         Byte[] songByteData = new Byte[0];
         try {
             songByteData = task.get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return songByteData;
     }
@@ -116,7 +166,7 @@ public class PasswordScreen extends Activity {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return md;
     }
@@ -136,17 +186,10 @@ public class PasswordScreen extends Activity {
         return new String(hexChars);
     }
 
-    private URL buildURL() {
-        URL url = null;
-        try {
-            url = new URL("https://p.scdn.co/mp3-preview/6af04a222889b42239a867b0c9991e7fdc599762");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
-
-    /** Called when users clicks the Copy to Clipboard button. Will take text from textView and copy. */
+    /**
+     * Called when users clicks the Copy to Clipboard button. Will take text from textView and copy.
+     * @param view
+     */
     public void copyToClipboard(View view){
         TextView tv = (TextView)findViewById(R.id.textView);
         String text = tv.getText().toString();
@@ -154,5 +197,11 @@ public class PasswordScreen extends Activity {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("label", text);
         clipboard.setPrimaryClip(clip);
+    }
+
+    public void openWebView(View view){
+        Intent intent = new Intent(this, WebViewer.class);
+        intent.putExtra("website", appName);
+        startActivity(intent);
     }
 }

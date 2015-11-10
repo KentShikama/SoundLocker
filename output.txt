@@ -1,0 +1,388 @@
+* commit 731e110ff9f9a252a79a5da31ada1f2b37a819ad (HEAD, web-view)
+| Author: Sam Warren <samuel.l.warren@gmail.com>
+| Date:   Sun Nov 8 22:41:03 2015 -0800
+| 
+|     make webview open user input
+|  
+* commit 96731e29ec642afa9606c0dfb996636f0bc6b5ed
+| Author: Sam Warren <samuel.l.warren@gmail.com>
+| Date:   Thu Nov 5 10:29:28 2015 -0800
+| 
+|     make web-view
+|      
+| *   commit 4e81957ae8f6f5ca31e1b03994d520d6c25b1528 (origin/develop, develop)
+| |\  Merge: 2db2bf4 25f1424
+| | | Author: Patrick Shao <shao.pat@gmail.com>
+| | | Date:   Thu Nov 5 13:13:18 2015 -0800
+| | | 
+| | |     Merge pull request #19 from theworldbright/feature/song-image-view
+| | |     
+| | |     Add song picker screen without images
+| | |    
+| | * commit 25f1424b21330c6d98f5f738f07c8cc07633648e
+| | | Author: theworldbright <kent@kentshikama.com>
+| | | Date:   Thu Nov 5 12:33:22 2015 -0800
+| | | 
+| | |     Fix UI tests
+| | |    
+| | * commit e3adf8b22a7f3260b10c51e2863a6b6e979962e2
+| |/  Author: theworldbright <kent@kentshikama.com>
+| |   Date:   Thu Nov 5 01:43:59 2015 -0800
+| |   
+| |       Add song picker screen without images
+| |   
+| * commit 2db2bf42002e2020a55ddf7b816687c6999dd878
+|/  Author: theworldbright <kent@kentshikama.com>
+|   Date:   Wed Nov 4 16:10:18 2015 -0800
+|   
+|       Add SongByteDataDownloader test
+|    
+*   commit 6e93c48abfdd9794bbe2b935fca1b9112a036589
+|\  Merge: 7749dba 875bf77
+| | Author: Patrick Shao <shao.pat@gmail.com>
+| | Date:   Tue Nov 3 14:55:09 2015 -0800
+| | 
+| |     Merge pull request #18 from theworldbright/feature/song-query-no-internet-handling
+| |     
+| |     Show alert dialog on no internet for SongSearcher
+| |   
+| * commit 875bf77e27e5cc2c550863fa53d823dc7ad460de
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Tue Nov 3 14:23:45 2015 -0800
+| | 
+| |     Fix song searcher test
+| |   
+| * commit 63a878976af60005d6e6c9e4edcf0ce19fbc5fbe
+|/  Author: theworldbright <kent@kentshikama.com>
+|   Date:   Tue Nov 3 13:01:54 2015 -0800
+|   
+|       Show alert dialog on no internet for SongSearcher
+|  
+* commit 7749dba689fe959a3b2fa21a01512e390443ac49
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Tue Nov 3 12:44:21 2015 -0800
+| 
+|     Move ItemContentReader to inner class of SongSearcher
+|    
+*   commit 1e6c4bae68870b4ff1ef1a7ad3a86c751cd107f1
+|\  Merge: 75329f4 3f02b17
+| | Author: Patrick Shao <shao.pat@gmail.com>
+| | Date:   Thu Oct 29 14:47:59 2015 -0700
+| | 
+| |     Merge pull request #17 from theworldbright/list-view
+| |     
+| |     Integrate List view
+| |   
+| * commit 3f02b17c31e9aa2b4283d9bb349e131ed6b43d61
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Thu Oct 29 14:27:09 2015 -0700
+| | 
+| |     Rename HelloWorldTest to UITest
+| |   
+| * commit bdf2a91d5a19768d1d11d98d67089e623eac206f
+| | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | Date:   Tue Oct 27 14:14:51 2015 -0700
+| | 
+| |     Implement automatic return from app adder
+| |   
+| * commit 944e12fc2c408cb62b0f061c118423d06df7d645
+|/  Author: Sam Warren <samuel.l.warren@gmail.com>
+|   Date:   Fri Oct 23 16:11:29 2015 -0700
+|   
+|       Make applications list view
+|    
+*   commit 75329f4e8a7aa4cdb3ee140b66656363429e1a2b
+|\  Merge: f285a26 19f233d
+| | Author: Patrick Shao <shao.pat@gmail.com>
+| | Date:   Thu Oct 29 12:17:26 2015 -0700
+| | 
+| |     Merge pull request #10 from theworldbright/feature/song-search
+| |     
+| |     Add ability to search songs from Spotify
+| |   
+| * commit 19f233dc0b5cae81462e587917535a420363515c
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Tue Oct 27 14:10:56 2015 -0700
+| | 
+| |     Make song name query URL safe
+| |   
+| * commit 9edd4735442fa45edecfe9518acb96c3b47dfa33
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Sun Oct 18 00:11:58 2015 -0700
+| | 
+| |     Add album image URL to song searcher
+| |     
+| |     + Minor refactorings
+| |   
+| * commit a10772e3313bbbd16de545750bb61803cbf3c5ee
+|/  Author: theworldbright <kent@kentshikama.com>
+|   Date:   Sat Oct 17 12:58:28 2015 -0700
+|   
+|       Add ability to search songs from Spotify
+|    
+*   commit f285a26b5813068de2cbb138a7f7ba9c45c73d53 (tag: alpha-v1, origin/master, origin/HEAD, master)
+|\  Merge: 5cbd514 a9332ef
+| | Author: Patrick Shao <shao.pat@gmail.com>
+| | Date:   Tue Oct 27 00:10:48 2015 -0700
+| | 
+| |     Merge pull request #13 from theworldbright/update-readme
+| |     
+| |     Update README.md
+| |   
+| * commit a9332efe70aba82bcda86f16f13058ef6c5f0012
+|/  Author: Kent Shikama <kent@kentshikama.com>
+|   Date:   Mon Oct 26 23:34:22 2015 -0700
+|   
+|       Update README.md
+|    
+*   commit 5cbd514b6e7867b562eba7e3fcfd030f5c61fd76
+|\  Merge: df48890 aa93cba
+| | Author: Patrick Shao <shao.pat@gmail.com>
+| | Date:   Sat Oct 24 17:39:58 2015 -0700
+| | 
+| |     Merge pull request #12 from theworldbright/readme
+| |     
+| |     Add a README
+| |   
+| * commit aa93cbac1cf63e66792d4ae55aba22df63b4fa95
+|/  Author: theworldbright <kent@kentshikama.com>
+|   Date:   Fri Oct 23 23:34:05 2015 -0700
+|   
+|       Add README
+|    
+| * commit a4ef461ac6020f0f0be21c2dd9496f4135d8d8b2 (origin/web-view)
+| | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | Date:   Mon Nov 2 19:57:44 2015 -0800
+| | 
+| |     implement basic webview
+| |     
+| | * commit 9e676370bcd3dbee31274b308b0db2f4175a1230 (list-view)
+| | | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | | Date:   Thu Oct 29 13:58:19 2015 -0700
+| | | 
+| | |     Revert globabl variable appname to local variable
+| | |    
+| | * commit 4f00324f26fdf6e81566a3936fbd4393d127686c
+| | | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | | Date:   Thu Oct 29 11:33:41 2015 -0700
+| | | 
+| | |     refactor appName test
+| | |    
+| | * commit 91129c1d89ce946cc400f6ea358cc29245e8947b
+| | | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | | Date:   Tue Oct 27 14:14:51 2015 -0700
+| | | 
+| | |     Implement automatic return from app adder
+| | |    
+| | * commit 49e64aa1fd78b06fb862a1401bff9aeae7c31625
+| |/  Author: Sam Warren <samuel.l.warren@gmail.com>
+|/|   Date:   Fri Oct 23 16:11:29 2015 -0700
+| |   
+| |       Make applications list view
+| |   
+* | commit df4889094d430c9daebe5adf230d3b170410bf30
+| | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | Date:   Thu Oct 15 13:48:07 2015 -0700
+| | 
+| |     Hash byte array using SHA256
+| |   
+* | commit db9d474c02f79709eadebe1137863e4219c0dade
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Tue Oct 13 14:34:08 2015 -0700
+| | 
+| |     Handle no internet connection case
+| |   
+* | commit dba05315b369db1a2ed06374488b3551d9857ac9
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Sat Oct 10 17:30:16 2015 -0700
+| | 
+| |     Set default password length as 5
+| |   
+* | commit a7be58c51f145813bf093e649c2152ffd6080b53
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Sat Oct 10 17:18:32 2015 -0700
+| | 
+| |     Enforce password length that was supplied
+| |   
+* | commit e1f457f4fd8dc86d63dcc491852944a76c6dc1fe
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Sat Oct 10 17:30:55 2015 -0700
+| | 
+| |     Use HttpsURLConnection for Spotify previews
+| |   
+* | commit d3c323db21f0f44ec524eb5f7b0d2767a6da19f4
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Sat Oct 10 16:23:36 2015 -0700
+| | 
+| |     Use 30 second preview from Spotify to generate password
+| |     
+| | * commit 2bf5a4d12b50bf595cdfbb13c38b97721ece69ad (temp)
+| |/  Author: Sam Warren <samuel.l.warren@gmail.com>
+| |   Date:   Fri Oct 23 16:11:29 2015 -0700
+| |   
+| |       make listview
+| |   
+| * commit 88896d13c1313e377107d655770af2661b5d8e90
+| | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | Date:   Wed Oct 14 22:31:35 2015 -0700
+| | 
+| |     format code and extract methods
+| |     
+| *   commit ff7daece0b9fd8d298d469355a2392fa77785c14
+| |\  Merge: bd8cf0f 1e7f5ec
+| |/  Author: Sam Warren <samuel.l.warren@gmail.com>
+|/|   Date:   Sun Oct 11 16:30:13 2015 -0700
+| |   
+| |       Merge branch 'develop' of https://github.com/theworldbright/SoundLocker into develop
+| |   
+* | commit 1e7f5ec17ac5d6ac10bf693acb8b4ea356a418ea
+| | Author: theworldbright <kent@kentshikama.com>
+| | Date:   Sat Oct 10 16:52:08 2015 -0700
+| | 
+| |     Adjust UI for Password Screen
+| |   
+| * commit bd8cf0f7c21b7e8faaedb038064d2bf91802ff2a
+|/  Author: Sam Warren <samuel.l.warren@gmail.com>
+|   Date:   Sun Oct 11 16:28:11 2015 -0700
+|   
+|       hash byte array using SHA256 then convert ensuing byte array into string
+|       of designed
+|  
+* commit 5d598ae94faee96434ef376f37658ed2eb960edd
+| Author: Sam Warren <samuel.l.warren@gmail.com>
+| Date:   Thu Oct 8 20:59:09 2015 -0700
+| 
+|     Merge "byte data from song file" feature
+|  
+* commit d7bab9d2b53df212170e8c5e77c392a2aa297ccd
+| Author: Patrick Shao <shao.pat@gmail.com>
+| Date:   Tue Oct 6 21:11:47 2015 -0700
+| 
+|     Separate texts and modify user interface
+|  
+* commit e97719737c06decf6115c98a3dac5ccefb6ba33b
+| Author: Patrick Shao <shao.pat@gmail.com>
+| Date:   Tue Oct 6 20:37:42 2015 -0700
+| 
+|     Create a test for all visible elements on the screen.
+|  
+* commit ba2e161ea1ca86aa7c4971b6e739210acf3979a2
+| Author: Patrick Shao <shao.pat@gmail.com>
+| Date:   Tue Oct 6 19:45:33 2015 -0700
+| 
+|     Create new tests and change theme
+|  
+* commit a42ae27abc0939e3f5332aaed7ae434adf16c91c
+| Author: Patrick Shao <shao.pat@gmail.com>
+| Date:   Wed Sep 30 23:35:52 2015 -0700
+| 
+|     Add copy to clipboard and generate password
+|     
+|     Generate password currently changes Hello World into a hardcoded text.
+|     Copy to clipboard takes information from that field and copies it to
+|     the keyboard.
+|  
+* commit 16e6da246f5259def424f048e1cc6ba5437cb1b9
+| Author: Patrick Shao <shao.pat@gmail.com>
+| Date:   Wed Sep 30 21:51:03 2015 -0700
+| 
+|     Change theme and add initial buttons
+|  
+* commit e502945930b229c3adc2f530a1c75746b19433c7
+| Author: Patrick Shao <shao.pat@gmail.com>
+| Date:   Wed Sep 30 21:30:14 2015 -0700
+| 
+|     Add app.iml to .gitignore
+|    
+| * commit 90b8b119e84c868a3abbf8e46d3c9cda1bfbdc1c (feature/song-info)
+| | Author: Sam Warren <samuel.l.warren@gmail.com>
+| | Date:   Sat Oct 10 15:51:06 2015 -0700
+| | 
+| |     play song on sd card
+| |   
+| * commit e322103b667bad763eb66cc36cc81abef414505e (song-info2, dev)
+|/  Author: Sam Warren <samuel.l.warren@gmail.com>
+|   Date:   Tue Sep 29 14:16:59 2015 -0700
+|   
+|       Read user's hangouts and play song
+|    
+*   commit 5b247453e72a858cb39b5004a658a1a3df771184
+|\  Merge: ce20eac 273fa3d
+| | Author: Kent Shikama <kent@kentshikama.com>
+| | Date:   Sun Sep 27 00:48:07 2015 -0700
+| | 
+| |     Merge pull request #3 from theworldbright/dev
+| |     
+| |     Add /idea to .gitignore and removed app.iml
+| |   
+| * commit 273fa3d83c7211417065c4117afd51590abaf77e
+|/  Author: Patrick Shao <shao.pat@gmail.com>
+|   Date:   Sun Sep 27 00:37:06 2015 -0700
+|   
+|       Add /idea to .gitignore and removed app.iml
+|  
+* commit ce20eac0b68c4b9ce8786447530e14baffe0251f
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sun Sep 27 00:05:29 2015 -0700
+| 
+|     Replace tabs with spaces
+|  
+* commit 60dcfffc5165412c761b8321db749aa408c726cf
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sun Sep 27 00:03:20 2015 -0700
+| 
+|     Add back parallel build
+|  
+* commit 07cd9020e99290cc25ffde2783afaf9aa3196144
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 23:59:18 2015 -0700
+| 
+|     Stabilize circle CI build with sleep calls
+|  
+* commit ba0002119ac85577be62cc603f380e0ed7149cd3
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 23:54:05 2015 -0700
+| 
+|     Fix minor build error
+|  
+* commit d8a0860bf12570ae3146687fea03ecc425c5cd17
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 22:37:15 2015 -0700
+| 
+|     Fix path on test server (Circle CI)
+|  
+* commit afb4320922578a11511a8d7a8fc81e9d5a9e4cda
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 22:24:13 2015 -0700
+| 
+|     Unlock screen before tests
+|  
+* commit df61e1c4a31b3a592342c1c71b6ce4b2aa8bb589
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 22:08:00 2015 -0700
+| 
+|     Change test emulator to android-21
+|  
+* commit 41d75eda4cbdf569223ed101258722dc9b9d0a31
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 21:50:33 2015 -0700
+| 
+|     Change SDK version to 21
+|  
+* commit ed3ad2129e5a095722360c733ee5d30f3a14fba7
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 21:43:00 2015 -0700
+| 
+|     Add Espresso 2.0 testing to Circle CI
+|  
+* commit 6af04c95f4fcda6c83345ab36f8b7fe2b5ce3fd7
+| Author: theworldbright <kent@kentshikama.com>
+| Date:   Sat Sep 26 20:25:27 2015 -0700
+| 
+|     Add initial circle.yml file for Circle CI
+|  
+* commit d6078098d61d9a8268776aaafb031a65fd7d8862
+  Author: theworldbright <kent@kentshikama.com>
+  Date:   Sat Sep 19 23:08:56 2015 -0700
+  
+      Initial commit
