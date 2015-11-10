@@ -25,6 +25,7 @@ public class PasswordScreen extends Activity {
 
     private static final String TAG = "PasswordScreen";
     private String previewUrl;
+    private String appName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +33,10 @@ public class PasswordScreen extends Activity {
         setContentView(R.layout.activity_password_screen);
 
         Intent intent = getIntent();
-        String appName = intent.getStringExtra("app_name");
+
+        appName = intent.getStringExtra("app_name");
         TextView title = (TextView) findViewById(R.id.textView);
+
         title.setText(appName);
 
         String songName = intent.getStringExtra("song_name");
@@ -194,5 +197,11 @@ public class PasswordScreen extends Activity {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("label", text);
         clipboard.setPrimaryClip(clip);
+    }
+
+    public void openWebView(View view){
+        Intent intent = new Intent(this, WebViewer.class);
+        intent.putExtra("website", appName);
+        startActivity(intent);
     }
 }
