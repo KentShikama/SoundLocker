@@ -83,15 +83,15 @@ public class PasswordScreen extends Activity {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl);
         String password = generator.generatePassword();
         int passwordLength = getPasswordLength();
-        TextView tv = (TextView) findViewById(R.id.textView);
-        tv.setText(password.substring(0, Math.min(6, passwordLength)));
+//        TextView tv = (TextView) findViewById(R.id.textView);
+//        tv.setText(password.substring(0, Math.min(8, passwordLength)));
     }
 
     private int getPasswordLength() {
         EditText passwordLengthField = (EditText) findViewById(R.id.passwordLength);
         String passwordLengthString = passwordLengthField.getText().toString();
         if (passwordLengthString.isEmpty()) {
-            return 5;
+            return 8;
         } else {
             return Integer.valueOf(passwordLengthString);
         }
