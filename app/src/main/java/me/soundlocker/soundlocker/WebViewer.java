@@ -31,7 +31,8 @@ public class WebViewer extends Activity{
         webview.getSettings().setDomStorageEnabled(true);
 
 //        webview.loadUrl(url);
-        webview.loadUrl("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/#identifier");
+//        webview.loadUrl("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/#identifier");
+        webview.loadUrl("http://www.facebook.com");
 
         setContentView(webview);
 
@@ -48,11 +49,11 @@ public class WebViewer extends Activity{
                 System.out.println("TESTING");
                 System.out.println(password);
 
-//                view.loadUrl("javascript:" +"var x = document.getElementById('email').value = 'blah';");
-                view.evaluateJavascript("document.getElementById('Email').value = 'blah';",null);
+                view.evaluateJavascript("document.getElementsByName('email')[0].value = 'blah';",null);
+                view.evaluateJavascript("document.getElementsByName('pass')[0].value = '111111111';",null);
 
-//                view.loadUrl("javascript:" +"var x = document.getElementById('email').value = '" + "blah" + "';");
-//                view.loadUrl("javascript:var y = document.getElementById('pass').value = " + password + ";");
+//                view.evaluateJavascript("document.getElementById('email').value = 'blah';",null);
+
             }
         });
 
