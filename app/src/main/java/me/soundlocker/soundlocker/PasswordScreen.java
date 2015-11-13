@@ -85,7 +85,7 @@ public class PasswordScreen extends Activity {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl);
         String password = generator.generatePassword();
         int passwordLength = getPasswordLength();
-        password = password.substring(0, Math.min(8, passwordLength));
+        this.password = password.substring(0, Math.min(8, passwordLength));
     }
 
     private int getPasswordLength() {
