@@ -207,12 +207,19 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
 
         private void readImage() throws IOException {
             reader.beginObject();
+            int height = 0;
             while (reader.hasNext()) {
                 String imageSymbol = reader.nextName();
                 if (imageSymbol.equals("url")) {
                     if (reader.peek() == JsonToken.STRING) {
                         String imageUrlString = reader.nextString();
-                        assignImageURLIf640x640(imageUrlString);
+                        assignImageURLIfSmall(imageUrlString, height);
+                    } else {
+                        reader.skipValue();
+                    }
+                } else if (imageSymbol.equals("height")) {
+                    if (reader.peek() == JsonToken.NUMBER) {
+                        height = reader.nextInt();
                     } else {
                         reader.skipValue();
                     }
@@ -223,8 +230,8 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
             reader.endObject();
         }
 
-        private void assignImageURLIf640x640(String imageUrlString) throws MalformedURLException {
-            if (imageUrl == null) {
+        private void assignImageURLIfSmall(String imageUrlString, int height) throws MalformedURLException {
+            if (height != 0 && height <= 100) {
                 imageUrl = new URL(imageUrlString);
             }
         }

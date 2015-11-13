@@ -2,16 +2,17 @@ package me.soundlocker.soundlocker;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -25,15 +26,15 @@ public class SongPickerScreen extends ListActivity {
     private static final String PREVIEW_URL = "preview_url";
     private static final String DEFAULT_SONG = "Native"; // To promote Native by One Republic
 
-    private ArrayList<String> songs = new ArrayList<>();
-    private ArrayAdapter<String> songsAdapter;
+    private ArrayList<ImmutablePair<String, Drawable>> songs = new ArrayList<>();
+    private SongItemAdapter songsAdapter;
     private ArrayList<ImmutableTriple<String, URL, URL>> currentResults;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_song_picker_screen);
-        songsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, songs);
+        songsAdapter = new SongItemAdapter(this, songs);
         setListAdapter(songsAdapter);
         EditText songQueryEditor = (EditText) findViewById(R.id.song_query);
         songQueryEditor.addTextChangedListener(new TextWatcher() {
@@ -89,7 +90,18 @@ public class SongPickerScreen extends ListActivity {
             currentResults = results;
             for (ImmutableTriple<String, URL, URL> song : results) {
                 String songName = song.getLeft();
-                songs.add(songName);
+                URL imageUrl = song.getRight();
+                SongImageDownloader imageDownloader = new SongImageDownloader(this);
+                imageDownloader.execute(imageUrl);
+                Drawable drawable = null;
+                try {
+                    drawable = imageDownloader.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                songs.add(new ImmutablePair<String, Drawable>(songName, drawable));
             }
             songsAdapter.notifyDataSetChanged();
         }

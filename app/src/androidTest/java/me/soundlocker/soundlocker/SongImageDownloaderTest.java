@@ -20,8 +20,7 @@ public class SongImageDownloaderTest {
 
     private static final String NATIVE_IMAGE_URL_STRING =
             "https://i.scdn.co/image/45b8542038b3b21e392ffead938153448c68ab1d";
-    private static final int IMAGE_WIDTH = 213;
-    private static final int IMAGE_HEIGHT = 213;
+    private static final int ALPHA = 255;
 
     @Test
     public void songByteDataIsConsistent() {
@@ -29,8 +28,7 @@ public class SongImageDownloaderTest {
         URL url = buildURL();
         task.execute(url);
         Drawable image = getDrawable(task);
-        assertEquals(image.getIntrinsicWidth(), IMAGE_WIDTH);
-        assertEquals(image.getIntrinsicHeight(), IMAGE_HEIGHT);
+        assertEquals(image.getAlpha(), ALPHA);
     }
 
     @Nullable
