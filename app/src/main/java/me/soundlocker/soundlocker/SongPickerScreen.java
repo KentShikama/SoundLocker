@@ -21,6 +21,9 @@ import java.util.concurrent.ExecutionException;
 
 public class SongPickerScreen extends ListActivity {
     private static final String TAG = "SongPickerScreen";
+    private static final String SONG_NAME = "song_name";
+    private static final String PREVIEW_URL = "preview_url";
+    private static final String DEFAULT_SONG = "Native"; // To promote Native by One Republic
 
     private ArrayList<String> songs = new ArrayList<>();
     private ArrayAdapter<String> songsAdapter;
@@ -77,7 +80,7 @@ public class SongPickerScreen extends ListActivity {
         } catch (UnsupportedEncodingException e) {
             Log.e(TAG, "Device does not support UTF-8");
         }
-        return "Native"; // To promote Native by One Republic
+        return DEFAULT_SONG;
     }
 
     public void updateList(ArrayList<ImmutableTriple<String, URL, URL>> results) {
@@ -102,8 +105,8 @@ public class SongPickerScreen extends ListActivity {
         String songName = song.getLeft();
         String previewUrl = song.getMiddle().toString();
         Intent intent = new Intent(this, PasswordScreen.class);
-        intent.putExtra("song_name", songName);
-        intent.putExtra("preview_url", previewUrl);
+        intent.putExtra(SONG_NAME, songName);
+        intent.putExtra(PREVIEW_URL, previewUrl);
         startActivity(intent);
     }
 }

@@ -10,7 +10,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class ApplicationsList extends ListActivity {
-    // LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
+    private static final String APP_NAME = "app_name";
+
     private static ArrayList<String> listItems = new ArrayList<>();
     private static ArrayAdapter<String> adapter;
 
@@ -22,11 +23,9 @@ public class ApplicationsList extends ListActivity {
         setListAdapter(adapter);
     }
 
-    // METHOD WHICH WILL HANDLE DYNAMIC INSERTION
-    public void addItems(View v ) {
+    public void addItems(View v) {
         Intent intent = new Intent(this, ApplicationAdder.class);
         startActivity(intent);
-
     }
 
     public static void updateList(String str) {
@@ -37,8 +36,7 @@ public class ApplicationsList extends ListActivity {
     protected void onListItemClick(ListView list, View view, int position, long id) {
         Intent intent = new Intent(this, PasswordScreen.class);
         String selectedItemName = listItems.get(position);
-        intent.putExtra("app_name", selectedItemName);
+        intent.putExtra(APP_NAME, selectedItemName);
         startActivity(intent);
-
     }
 }
