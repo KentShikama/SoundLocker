@@ -113,6 +113,7 @@ public class PasswordScreen extends Activity {
     public void openWebView(View view){
         Intent intent = new Intent(this, WebViewer.class);
         intent.putExtra(WEBSITE, appName);
+        intent.putExtra("password",password);
         startActivity(intent);
     }
 }
