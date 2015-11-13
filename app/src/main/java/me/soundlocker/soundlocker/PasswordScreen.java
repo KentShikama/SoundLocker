@@ -74,6 +74,7 @@ public class PasswordScreen extends Activity {
      */
     public void showSongPicker(View view) {
         Intent intent = new Intent(this, SongPickerScreen.class);
+        intent.putExtra("app_name", appName);
         startActivity(intent);
     }
 
