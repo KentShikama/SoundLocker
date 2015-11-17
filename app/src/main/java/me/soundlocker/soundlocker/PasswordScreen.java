@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,17 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.ExecutionException;
-
 public class PasswordScreen extends Activity {
-
-    private static final String TAG = "PasswordScreen";
+    private static final String APP_NAME = "app_name";
+    private static final String SONG_NAME = "song_name";
+    private static final String PREVIEW_URL = "preview_url";
+    private static final String WEBSITE = "website";
+    private static final String LABEL = "label";
     private String previewUrl;
     private String appName;
 
@@ -31,21 +25,28 @@ public class PasswordScreen extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_screen);
+        setInitialValues();
+    }
 
+    private void setInitialValues() {
         Intent intent = getIntent();
+        setTitle(intent);
+        setSongName(intent);
+        previewUrl = intent.getStringExtra(PREVIEW_URL);
+    }
 
-        appName = intent.getStringExtra("app_name");
-        TextView title = (TextView) findViewById(R.id.textView);
-
-        title.setText(appName);
-
-        String songName = intent.getStringExtra("song_name");
+    private void setSongName(Intent intent) {
+        String songName = intent.getStringExtra(SONG_NAME);
         if (songName != null) {
             Button chooseSongButton = (Button) findViewById(R.id.chooseSong);
             chooseSongButton.setText(songName);
         }
+    }
 
-        previewUrl = intent.getStringExtra("preview_url");
+    private void setTitle(Intent intent) {
+        appName = intent.getStringExtra(APP_NAME);
+        TextView title = (TextView) findViewById(R.id.textView);
+        title.setText(appName);
     }
 
     @Override
@@ -61,12 +62,9 @@ public class PasswordScreen extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -82,7 +80,8 @@ public class PasswordScreen extends Activity {
      * Called when the user clicks the Generate Password button
      */
     public void displayPassword(View view) {
-        String password = generatePassword();
+        PasswordGenerator generator = new PasswordGenerator(this, previewUrl);
+        String password = generator.generatePassword();
         int passwordLength = getPasswordLength();
         TextView tv = (TextView) findViewById(R.id.textView);
         tv.setText(password.substring(0, Math.min(6, passwordLength)));
@@ -98,110 +97,24 @@ public class PasswordScreen extends Activity {
         }
     }
 
-    private String generatePassword() {
-        URL url = buildURL();
-        if (url == null) {
-            return "--------------";
-        } else {
-            return generatePasswordForNotNullURL(url);
-        }
-    }
-
-    private URL buildURL() {
-        if (previewUrl == null) {
-            return null;
-        } else {
-            try {
-                return new URL(previewUrl);
-            } catch (MalformedURLException e) {
-                Log.e(TAG, e.getMessage());
-                return null;
-            }
-        }
-    }
-
-    private String generatePasswordForNotNullURL(URL url) {
-        SongByteDataDownloader task = new SongByteDataDownloader(this);
-        task.execute(url);
-        Byte[] songByteData = getSongByteData(task);
-        if (songByteData == null) {
-            return "--------------";
-        } else {
-            String password = hash(ArrayUtils.toPrimitive(songByteData));
-            return password;
-        }
-    }
-
-    private Byte[] getSongByteData(SongByteDataDownloader task) {
-        Byte[] songByteData = new Byte[0];
-        try {
-            songByteData = task.get();
-        } catch (InterruptedException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (ExecutionException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        return songByteData;
-    }
-
-    /**
-     * @param data the byte[] from the song
-     * @return byte[] created hashing song bytes
-     */
-    private String hash(byte[] data) {
-        byte[] passBytes = hash256(data);
-        String password = bytesToString(passBytes);
-        return password;
-    }
-
-    private byte[] hash256(byte[] data) {
-        MessageDigest md = getMessageDigest();
-        md.update(data);
-        byte[] passBytes = md.digest();
-        return passBytes;
-    }
-
-    private MessageDigest getMessageDigest() {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        return md;
-    }
-
-    /**
-     * @param bytes - the byte array generated using hash
-     * @return the array displayed as a hex string
-     */
-    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-    private static String bytesToString(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
     /**
      * Called when users clicks the Copy to Clipboard button. Will take text from textView and copy.
-     * @param view
      */
     public void copyToClipboard(View view){
         TextView tv = (TextView)findViewById(R.id.textView);
         String text = tv.getText().toString();
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("label", text);
+        ClipData clip = ClipData.newPlainText(LABEL, text);
         clipboard.setPrimaryClip(clip);
     }
 
+    /**
+     * Called when users click the Open Web View button.
+     */
     public void openWebView(View view){
         Intent intent = new Intent(this, WebViewer.class);
-        intent.putExtra("website", appName);
+        intent.putExtra(WEBSITE, appName);
         startActivity(intent);
     }
 }

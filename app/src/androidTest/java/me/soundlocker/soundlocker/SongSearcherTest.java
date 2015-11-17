@@ -21,7 +21,7 @@ public class SongSearcherTest {
     private static final String NATIVE_PREVIEW_URL_STRING =
             "https://p.scdn.co/mp3-preview/c58cd3ffb9e61ad38cde7658f436b4245cfd2666";
     private static final String NATIVE_IMAGE_URL_STRING =
-            "https://i.scdn.co/image/45b8542038b3b21e392ffead938153448c68ab1d";
+            "https://i.scdn.co/image/81fd93b405773dffa494ead6fdf9c5a13d52eed9";
 
     @Test
     public void readNativeByOneRepublicSong() {
