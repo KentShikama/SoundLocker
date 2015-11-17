@@ -18,8 +18,9 @@ public class PasswordScreen extends Activity {
     private static final String PREVIEW_URL = "preview_url";
     private static final String WEBSITE = "website";
     private static final String LABEL = "label";
-    private static final String PASSWORD_LENGTH = "password_length";
-    private static final int DEFAULT_PASSWORD_LENGTH = 6;
+    private static final int DEFAULT_PASSWORD_LENGTH = 10;
+    private static final int MINIMUM_PASSWORD_LENGTH = 3;
+    private static final int MAXIMUM_PASSWORD_LENGTH = 10;
     private String previewUrl;
     private String appName;
     private String password = "";
@@ -30,13 +31,6 @@ public class PasswordScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_screen);
         setInitialValues();
-        NumberPicker passwordLengthPicker = (NumberPicker) findViewById(R.id.passwordLength);
-        passwordLengthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                storage.saveApplicationPasswordLength(PasswordScreen.this.getApplicationContext(), appName, newVal);
-            }
-        });
     }
 
     @Override
@@ -49,15 +43,30 @@ public class PasswordScreen extends Activity {
         Intent intent = getIntent();
         setTitle(intent);
         setSongName(intent);
+        setPasswordLength();
+        previewUrl = intent.getStringExtra(PREVIEW_URL);
+    }
+
+    private void setPasswordLength() {
         NumberPicker passwordLengthPicker = (NumberPicker) findViewById(R.id.passwordLength);
-        passwordLengthPicker.setMinValue(1);
-        passwordLengthPicker.setMaxValue(20);
+        passwordLengthPicker.setMinValue(MINIMUM_PASSWORD_LENGTH);
+        passwordLengthPicker.setMaxValue(MAXIMUM_PASSWORD_LENGTH);
+        int passwordLength = getPasswordLength();
+        passwordLengthPicker.setValue(passwordLength);
+        passwordLengthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                storage.saveApplicationPasswordLength(PasswordScreen.this.getApplicationContext(), appName, newVal);
+            }
+        });
+    }
+
+    private int getPasswordLength() {
         int passwordLength = storage.getApplicationPasswordLength(this, appName);
         if (passwordLength == -1) {
             passwordLength = DEFAULT_PASSWORD_LENGTH;
         }
-        passwordLengthPicker.setValue(passwordLength);
-        previewUrl = intent.getStringExtra(PREVIEW_URL);
+        return passwordLength;
     }
 
     private void setSongName(Intent intent) {
@@ -108,12 +117,12 @@ public class PasswordScreen extends Activity {
     public void displayPassword(View view) {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl);
         String password = generator.generatePassword();
-        int passwordLength = getPasswordLength();
+        int passwordLength = fetchPasswordLength();
         TextView tv = (TextView) findViewById(R.id.textView);
-        tv.setText(password.substring(0, Math.min(6, passwordLength)));
+        tv.setText(password.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength)));
     }
 
-    private int getPasswordLength() {
+    private int fetchPasswordLength() {
         NumberPicker passwordLengthPicker = (NumberPicker) findViewById(R.id.passwordLength);
         int passwordLengthString = passwordLengthPicker.getValue();
         return passwordLengthString;

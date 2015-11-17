@@ -1,6 +1,7 @@
 package me.soundlocker.soundlocker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,8 +29,22 @@ public class ApplicationAdder extends Activity {
                     Intent intent = new Intent(ApplicationAdder.this, ApplicationsList.class);
                     startActivity(intent);
                 } else {
-                    // TODO: Show error dialog
+                    showErrorDialog();
                 }
+            }
+
+            private void showErrorDialog() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationAdder.this);
+                builder.setTitle("Failed to Add App");
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.setMessage("You already have this app added\n");
+                builder.setPositiveButton("Ok", null);
+                final AlertDialog alert = builder.create();
+                ApplicationAdder.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        alert.show();
+                    }
+                });
             }
         };
     }

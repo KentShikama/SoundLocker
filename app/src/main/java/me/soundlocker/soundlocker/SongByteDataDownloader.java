@@ -21,7 +21,7 @@ import javax.net.ssl.HttpsURLConnection;
  * The task returns an array of Bytes representing the song.
  */
 class SongByteDataDownloader extends AsyncTask<URL, Integer, Byte[]> {
-
+    private static final String TAG = "SongByteDataDownloader";
     private final Activity activity;
 
     public SongByteDataDownloader(Activity activity) {
@@ -38,7 +38,7 @@ class SongByteDataDownloader extends AsyncTask<URL, Integer, Byte[]> {
             byte[] result = inputStreamToByteArray(fileInputStream);
             return ArrayUtils.toObject(result);
         } catch (IOException e) {
-            Log.e("SongByteDataDownloader", e.getMessage());
+            Log.e(TAG, e.getMessage());
         } finally {
             urlConnection.disconnect();
         }
