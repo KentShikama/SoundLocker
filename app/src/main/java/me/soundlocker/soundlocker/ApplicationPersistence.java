@@ -65,6 +65,9 @@ public class ApplicationPersistence {
      */
     public int getApplicationPasswordLength(Context context, String applicationName) {
         List<Application> applications = getApplications(context);
+        if (applications == null) {
+            applications = new ArrayList<>();
+        }
         for (Application application : applications) {
             if (application.applicationName.equals(applicationName)) {
                 return application.passwordLength;
