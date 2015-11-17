@@ -18,5 +18,6 @@
 
 
     <string name="hello_world">Hello world!</string>
+    <string name="passwordLengthLabel">Password Length</string>
 
 </resources>

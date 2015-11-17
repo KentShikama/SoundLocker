@@ -9,7 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 public class PasswordScreen extends Activity {
@@ -18,14 +18,30 @@ public class PasswordScreen extends Activity {
     private static final String PREVIEW_URL = "preview_url";
     private static final String WEBSITE = "website";
     private static final String LABEL = "label";
+    private static final String PASSWORD_LENGTH = "password_length";
+    private static final int DEFAULT_PASSWORD_LENGTH = 6;
     private String previewUrl;
     private String appName;
     private String password = "";
+    private ApplicationPersistence storage = new ApplicationPersistence();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_screen);
+        setInitialValues();
+        NumberPicker passwordLengthPicker = (NumberPicker) findViewById(R.id.passwordLength);
+        passwordLengthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                storage.saveApplicationPasswordLength(PasswordScreen.this.getApplicationContext(), appName, newVal);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setInitialValues();
     }
 
@@ -33,6 +49,14 @@ public class PasswordScreen extends Activity {
         Intent intent = getIntent();
         setTitle(intent);
         setSongName(intent);
+        NumberPicker passwordLengthPicker = (NumberPicker) findViewById(R.id.passwordLength);
+        passwordLengthPicker.setMinValue(1);
+        passwordLengthPicker.setMaxValue(20);
+        int passwordLength = storage.getApplicationPasswordLength(this, appName);
+        if (passwordLength == -1) {
+            passwordLength = DEFAULT_PASSWORD_LENGTH;
+        }
+        passwordLengthPicker.setValue(passwordLength);
         previewUrl = intent.getStringExtra(PREVIEW_URL);
     }
 
@@ -74,7 +98,7 @@ public class PasswordScreen extends Activity {
      */
     public void showSongPicker(View view) {
         Intent intent = new Intent(this, SongPickerScreen.class);
-        intent.putExtra("app_name", appName);
+        intent.putExtra(APP_NAME, appName);
         startActivity(intent);
     }
 
@@ -85,25 +109,25 @@ public class PasswordScreen extends Activity {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl);
         String password = generator.generatePassword();
         int passwordLength = getPasswordLength();
-        this.password = password.substring(0, Math.min(8, passwordLength));
+        TextView tv = (TextView) findViewById(R.id.textView);
+        tv.setText(password.substring(0, Math.min(6, passwordLength)));
     }
 
     private int getPasswordLength() {
-        EditText passwordLengthField = (EditText) findViewById(R.id.passwordLength);
-        String passwordLengthString = passwordLengthField.getText().toString();
-        if (passwordLengthString.isEmpty()) {
-            return 8;
-        } else {
-            return Integer.valueOf(passwordLengthString);
-        }
+        NumberPicker passwordLengthPicker = (NumberPicker) findViewById(R.id.passwordLength);
+        int passwordLengthString = passwordLengthPicker.getValue();
+        return passwordLengthString;
     }
 
     /**
      * Called when users clicks the Copy to Clipboard button. Will take text from textView and copy.
      */
     public void copyToClipboard(View view){
+        TextView tv = (TextView)findViewById(R.id.textView);
+        String text = tv.getText().toString();
+
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("label", password);
+        ClipData clip = ClipData.newPlainText(LABEL, text);
         clipboard.setPrimaryClip(clip);
     }
 
@@ -113,7 +137,6 @@ public class PasswordScreen extends Activity {
     public void openWebView(View view){
         Intent intent = new Intent(this, WebViewer.class);
         intent.putExtra(WEBSITE, appName);
-        intent.putExtra("password",password);
         startActivity(intent);
     }
 }

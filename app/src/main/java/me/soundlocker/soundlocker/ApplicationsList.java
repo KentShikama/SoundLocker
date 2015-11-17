@@ -11,16 +11,37 @@ import java.util.ArrayList;
 
 public class ApplicationsList extends ListActivity {
     private static final String APP_NAME = "app_name";
+    private static final String PASSWORD_LENGTH = "password_length";
 
-    private static ArrayList<String> listItems = new ArrayList<>();
-    private static ArrayAdapter<String> adapter;
+    private ArrayList<Application> applicationsList;
+    private ArrayList<String> applicationsNameList;
+    private ArrayAdapter<String> adapter;
+    private ApplicationPersistence storage = new ApplicationPersistence();
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         setContentView(R.layout.activity_applications_list);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItems);
+        applicationsList = buildApplicationsList();
+        applicationsNameList = buildApplicationsNameList(applicationsList);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
         setListAdapter(adapter);
+    }
+
+    private ArrayList<Application> buildApplicationsList() {
+        ArrayList<Application> applicationsList = storage.getApplications(this.getApplicationContext());
+        if (applicationsList == null) {
+            applicationsList = new ArrayList<>();
+        }
+        return applicationsList;
+    }
+
+    private ArrayList<String> buildApplicationsNameList(ArrayList<Application> applicationsList) {
+        ArrayList<String> applicationNameList = new ArrayList<>();
+        for (Application application : applicationsList) {
+            applicationNameList.add(application.applicationName);
+        }
+        return applicationNameList;
     }
 
     public void addItems(View v) {
@@ -28,15 +49,11 @@ public class ApplicationsList extends ListActivity {
         startActivity(intent);
     }
 
-    public static void updateList(String str) {
-        listItems.add(str);
-        adapter.notifyDataSetChanged();
-    }
-
     protected void onListItemClick(ListView list, View view, int position, long id) {
         Intent intent = new Intent(this, PasswordScreen.class);
-        String selectedItemName = listItems.get(position);
-        intent.putExtra(APP_NAME, selectedItemName);
+        Application selectedApplication = applicationsList.get(position);
+        intent.putExtra(APP_NAME, selectedApplication.applicationName);
+        intent.putExtra(PASSWORD_LENGTH, selectedApplication.passwordLength);
         startActivity(intent);
     }
 }
