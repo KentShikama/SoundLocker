@@ -9,9 +9,6 @@ import android.webkit.WebViewClient;
 
 import java.util.ArrayList;
 
-/**
- * Created by SamW on 11/2/2015.
- */
 public class WebViewer extends Activity{
     private ArrayList<String> webEndings;
     private String password = "";
@@ -30,8 +27,6 @@ public class WebViewer extends Activity{
         webSettings.setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
 
-//        webview.loadUrl(url);
-//        webview.loadUrl("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/#identifier");
         webview.loadUrl("http://www.facebook.com");
 
         setContentView(webview);
@@ -41,19 +36,7 @@ public class WebViewer extends Activity{
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                System.out.println("TESTING");
-                System.out.println("TESTING");
-                System.out.println("TESTING");
-                System.out.println("TESTING");
-                System.out.println("TESTING");
-                System.out.println("TESTING");
-                System.out.println(password);
-
-                view.evaluateJavascript("document.getElementsByName('email')[0].value = 'blah';",null);
-                view.evaluateJavascript("document.getElementsByName('pass')[0].value = '111111111';",null);
-
-//                view.evaluateJavascript("document.getElementById('email').value = 'blah';",null);
-
+                view.evaluateJavascript("document.getElementsByName('pass')[0].value = '"+password+"';",null);
             }
         });
 
