@@ -20,6 +20,7 @@ public class PasswordScreen extends Activity {
     private static final String LABEL = "label";
     private String previewUrl;
     private String appName;
+    private String password = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class PasswordScreen extends Activity {
      */
     public void showSongPicker(View view) {
         Intent intent = new Intent(this, SongPickerScreen.class);
+        intent.putExtra("app_name", appName);
         startActivity(intent);
     }
 
@@ -83,15 +85,14 @@ public class PasswordScreen extends Activity {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl);
         String password = generator.generatePassword();
         int passwordLength = getPasswordLength();
-        TextView tv = (TextView) findViewById(R.id.textView);
-        tv.setText(password.substring(0, Math.min(6, passwordLength)));
+        this.password = password.substring(0, Math.min(8, passwordLength));
     }
 
     private int getPasswordLength() {
         EditText passwordLengthField = (EditText) findViewById(R.id.passwordLength);
         String passwordLengthString = passwordLengthField.getText().toString();
         if (passwordLengthString.isEmpty()) {
-            return 5;
+            return 8;
         } else {
             return Integer.valueOf(passwordLengthString);
         }
@@ -101,11 +102,8 @@ public class PasswordScreen extends Activity {
      * Called when users clicks the Copy to Clipboard button. Will take text from textView and copy.
      */
     public void copyToClipboard(View view){
-        TextView tv = (TextView)findViewById(R.id.textView);
-        String text = tv.getText().toString();
-
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(LABEL, text);
+        ClipData clip = ClipData.newPlainText("label", password);
         clipboard.setPrimaryClip(clip);
     }
 
@@ -115,6 +113,7 @@ public class PasswordScreen extends Activity {
     public void openWebView(View view){
         Intent intent = new Intent(this, WebViewer.class);
         intent.putExtra(WEBSITE, appName);
+        intent.putExtra("password",password);
         startActivity(intent);
     }
 }

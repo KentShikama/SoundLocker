@@ -29,10 +29,13 @@ public class SongPickerScreen extends ListActivity {
     private ArrayList<ImmutablePair<String, Drawable>> songs = new ArrayList<>();
     private SongItemAdapter songsAdapter;
     private ArrayList<ImmutableTriple<String, URL, URL>> currentResults;
+    private String appName;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        appName = getIntent().getStringExtra("app_name");
         setContentView(R.layout.activity_song_picker_screen);
         songsAdapter = new SongItemAdapter(this, songs);
         setListAdapter(songsAdapter);
@@ -119,6 +122,7 @@ public class SongPickerScreen extends ListActivity {
         Intent intent = new Intent(this, PasswordScreen.class);
         intent.putExtra(SONG_NAME, songName);
         intent.putExtra(PREVIEW_URL, previewUrl);
+        intent.putExtra("app_name", appName);
         startActivity(intent);
     }
 }
