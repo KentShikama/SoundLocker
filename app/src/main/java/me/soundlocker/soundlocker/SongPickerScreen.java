@@ -25,6 +25,7 @@ public class SongPickerScreen extends ListActivity {
     private static final String SONG_NAME = "song_name";
     private static final String PREVIEW_URL = "preview_url";
     private static final String DEFAULT_SONG = "Native"; // To promote Native by One Republic
+    private static final String APP_NAME = "app_name";
 
     private ArrayList<ImmutablePair<String, Drawable>> songs = new ArrayList<>();
     private SongItemAdapter songsAdapter;
@@ -37,20 +38,16 @@ public class SongPickerScreen extends ListActivity {
 
         appName = getIntent().getStringExtra("app_name");
         setContentView(R.layout.activity_song_picker_screen);
+        Intent intent = getIntent();
+        appName = intent.getStringExtra(APP_NAME);
         songsAdapter = new SongItemAdapter(this, songs);
         setListAdapter(songsAdapter);
         EditText songQueryEditor = (EditText) findViewById(R.id.song_query);
         songQueryEditor.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable editable) {
                 String currentValue = editable.toString();
@@ -120,6 +117,7 @@ public class SongPickerScreen extends ListActivity {
         String songName = song.getLeft();
         String previewUrl = song.getMiddle().toString();
         Intent intent = new Intent(this, PasswordScreen.class);
+        intent.putExtra(APP_NAME, appName);
         intent.putExtra(SONG_NAME, songName);
         intent.putExtra(PREVIEW_URL, previewUrl);
         intent.putExtra("app_name", appName);
