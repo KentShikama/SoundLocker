@@ -18,6 +18,7 @@ public class PasswordScreen extends Activity {
     private static final String PREVIEW_URL = "preview_url";
     private static final String WEBSITE = "website";
     private static final String LABEL = "label";
+    private static final String PASSWORD = "password";
     private static final int DEFAULT_PASSWORD_LENGTH = 10;
     private static final int MINIMUM_PASSWORD_LENGTH = 3;
     private static final int MAXIMUM_PASSWORD_LENGTH = 10;
@@ -119,7 +120,8 @@ public class PasswordScreen extends Activity {
         String password = generator.generatePassword();
         int passwordLength = fetchPasswordLength();
         TextView tv = (TextView) findViewById(R.id.textView);
-        tv.setText(password.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength)));
+        this.password = password.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength));
+        tv.setText(this.password);
     }
 
     private int fetchPasswordLength() {
@@ -146,6 +148,7 @@ public class PasswordScreen extends Activity {
     public void openWebView(View view){
         Intent intent = new Intent(this, WebViewer.class);
         intent.putExtra(WEBSITE, appName);
+        intent.putExtra(PASSWORD,password);
         startActivity(intent);
     }
 }
