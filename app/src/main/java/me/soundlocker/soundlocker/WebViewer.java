@@ -10,16 +10,27 @@ import android.webkit.WebViewClient;
 import java.util.ArrayList;
 
 public class WebViewer extends Activity{
+    private static final String PASSWORD = "password";
+    private static final String WEBSITE = "website";
     private ArrayList<String> webEndings;
     private String password = "";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setInitialValues();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        setInitialValues();
+    }
+
+    private void setInitialValues() {
+        Intent intent = getIntent();
+        String website = intent.getStringExtra(WEBSITE);
+        password = intent.getStringExtra(PASSWORD);
         webEndings = new ArrayList<String>();
         populateWebEndings(webEndings);
-        Intent intent = getIntent();
-        String website = intent.getStringExtra("website");
-        password = intent.getStringExtra("password");
 
         String url = makeUrl(website);
         WebView webview = new WebView(this);
@@ -33,7 +44,6 @@ public class WebViewer extends Activity{
 
         //prevents certain sites from defaulting to browser
         webview.setWebViewClient(new WebViewClient() {
-
             @Override
             public void onPageFinished(WebView view, String url) {
                 view.evaluateJavascript("document.getElementsByName('pass')[0].value = '"+password+"';",null);
