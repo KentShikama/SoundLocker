@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class ApplicationsList extends ListActivity {
     private static final String APP_NAME = "app_name";
     private static final String PASSWORD_LENGTH = "password_length";
+    private static final String MASTER_ID = "master_id";
 
     private ArrayList<Application> applicationsList;
     private ArrayList<String> applicationsNameList;
@@ -77,6 +78,7 @@ public class ApplicationsList extends ListActivity {
         Application selectedApplication = applicationsList.get(position);
         intent.putExtra(APP_NAME, selectedApplication.applicationName);
         intent.putExtra(PASSWORD_LENGTH, selectedApplication.passwordLength);
+        intent.putExtra(MASTER_ID, masterId);
         startActivity(intent);
     }
 }

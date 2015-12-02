@@ -15,13 +15,22 @@ public class PasswordGenerator {
     private final PasswordScreen passwordScreen;
     private final String previewStringURL;
     private final String BLANK_LINES = "--------------";
+    private String appName;
+    private String masterId;
 
-    PasswordGenerator(PasswordScreen passwordScreen, String previewStringURL) {
+    PasswordGenerator(PasswordScreen passwordScreen, String previewStringURL, String appName, String masterId) {
         this.passwordScreen = passwordScreen;
         this.previewStringURL = previewStringURL;
+        this.appName = appName;
+        this.masterId = masterId;
+
+        Log.e("Test","Printing Values");
+        Log.e("Test",appName);
+        Log.e("Test",masterId);
     }
 
     String generatePassword() {
+        Log.e("Test","Step 1");
         URL url = buildURL();
         if (url == null) {
             return BLANK_LINES;
@@ -44,6 +53,7 @@ public class PasswordGenerator {
     }
 
     private String generatePasswordForNotNullURL(URL url) {
+        Log.e("Test","Step 2");
         SongByteDataDownloader task = new SongByteDataDownloader(passwordScreen);
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
@@ -72,14 +82,23 @@ public class PasswordGenerator {
      * @return byte[] created hashing song bytes
      */
     private String hash(byte[] data) {
+        Log.e("Test","Step 3");
         byte[] passBytes = hash256(data);
         String password = bytesToString(passBytes);
         return password;
     }
 
     private byte[] hash256(byte[] data) {
+        Log.e("Test", "Step 4");
         MessageDigest md = getMessageDigest();
         md.update(data);
+        md.update(this.appName.getBytes());
+        md.update(this.masterId.getBytes());
+
+        Log.e("Test","???");
+        Log.e("Test", appName);
+        Log.e("Test",masterId);
+
         byte[] passBytes = md.digest();
         return passBytes;
     }
