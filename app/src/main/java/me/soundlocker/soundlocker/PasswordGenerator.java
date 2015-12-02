@@ -15,10 +15,14 @@ public class PasswordGenerator {
     private final PasswordScreen passwordScreen;
     private final String previewStringURL;
     private final String BLANK_LINES = "--------------";
+    private String appName;
+    private String masterId;
 
-    PasswordGenerator(PasswordScreen passwordScreen, String previewStringURL) {
+    PasswordGenerator(PasswordScreen passwordScreen, String previewStringURL, String appName, String masterId) {
         this.passwordScreen = passwordScreen;
         this.previewStringURL = previewStringURL;
+        this.appName = appName;
+        this.masterId = masterId;
     }
 
     String generatePassword() {
@@ -80,6 +84,9 @@ public class PasswordGenerator {
     private byte[] hash256(byte[] data) {
         MessageDigest md = getMessageDigest();
         md.update(data);
+        md.update(this.appName.getBytes());
+        md.update(this.masterId.getBytes());
+
         byte[] passBytes = md.digest();
         return passBytes;
     }

@@ -26,20 +26,23 @@ public class SongPickerScreen extends ListActivity {
     private static final String PREVIEW_URL = "preview_url";
     private static final String DEFAULT_SONG = "Native"; // To promote Native by One Republic
     private static final String APP_NAME = "app_name";
+    private static final String MASTER_ID = "master_id";
 
     private ArrayList<ImmutablePair<String, Drawable>> songs = new ArrayList<>();
     private SongItemAdapter songsAdapter;
     private ArrayList<ImmutableTriple<String, URL, URL>> currentResults;
     private String appName;
+    private String masterId;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        appName = getIntent().getStringExtra("app_name");
         setContentView(R.layout.activity_song_picker_screen);
         Intent intent = getIntent();
         appName = intent.getStringExtra(APP_NAME);
+        masterId = intent.getStringExtra(MASTER_ID);
+
         songsAdapter = new SongItemAdapter(this, songs);
         setListAdapter(songsAdapter);
         EditText songQueryEditor = (EditText) findViewById(R.id.song_query);
@@ -120,7 +123,7 @@ public class SongPickerScreen extends ListActivity {
         intent.putExtra(APP_NAME, appName);
         intent.putExtra(SONG_NAME, songName);
         intent.putExtra(PREVIEW_URL, previewUrl);
-        intent.putExtra("app_name", appName);
+        intent.putExtra(MASTER_ID, masterId);
         startActivity(intent);
     }
 }

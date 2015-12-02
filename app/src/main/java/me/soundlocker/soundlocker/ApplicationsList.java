@@ -7,16 +7,22 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 
 public class ApplicationsList extends ListActivity {
     private static final String APP_NAME = "app_name";
     private static final String PASSWORD_LENGTH = "password_length";
+    private static final String MASTER_ID = "master_id";
 
     private ArrayList<Application> applicationsList;
     private ArrayList<String> applicationsNameList;
     private ArrayAdapter<String> adapter;
-    private ApplicationPersistence storage = new ApplicationPersistence();
+    private Persistence storage = new Persistence();
+    private boolean firstBoot;
+    private String masterId;
+    private SecureRandom random = new SecureRandom();
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -26,6 +32,13 @@ public class ApplicationsList extends ListActivity {
         applicationsNameList = buildApplicationsNameList(applicationsList);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
         setListAdapter(adapter);
+
+        firstBoot = storage.getFirstBoot(this.getApplicationContext());
+        if (firstBoot == false){
+            masterId = new BigInteger(256, random).toString(32);
+            storage.saveMasterId(ApplicationsList.this.getApplicationContext(),masterId);
+            storage.saveFirstBoot(ApplicationsList.this.getApplicationContext(), true);
+        }
     }
 
     private ArrayList<Application> buildApplicationsList() {
@@ -54,6 +67,7 @@ public class ApplicationsList extends ListActivity {
         Application selectedApplication = applicationsList.get(position);
         intent.putExtra(APP_NAME, selectedApplication.applicationName);
         intent.putExtra(PASSWORD_LENGTH, selectedApplication.passwordLength);
+        intent.putExtra(MASTER_ID, masterId);
         startActivity(intent);
     }
 }

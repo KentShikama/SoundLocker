@@ -19,13 +19,15 @@ public class PasswordScreen extends Activity {
     private static final String WEBSITE = "website";
     private static final String LABEL = "label";
     private static final String PASSWORD = "password";
+    private static final String MASTER_ID = "master_id";
     private static final int DEFAULT_PASSWORD_LENGTH = 10;
     private static final int MINIMUM_PASSWORD_LENGTH = 3;
     private static final int MAXIMUM_PASSWORD_LENGTH = 10;
     private String previewUrl;
     private String appName;
     private String password = "";
-    private ApplicationPersistence storage = new ApplicationPersistence();
+    private String masterId = "";
+    private Persistence storage = new Persistence();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class PasswordScreen extends Activity {
         setSongName(intent);
         setPasswordLength();
         previewUrl = intent.getStringExtra(PREVIEW_URL);
+        masterId = intent.getStringExtra(MASTER_ID);
     }
 
     private void setPasswordLength() {
@@ -109,6 +112,7 @@ public class PasswordScreen extends Activity {
     public void showSongPicker(View view) {
         Intent intent = new Intent(this, SongPickerScreen.class);
         intent.putExtra(APP_NAME, appName);
+        intent.putExtra(MASTER_ID, masterId);
         startActivity(intent);
     }
 
@@ -116,7 +120,7 @@ public class PasswordScreen extends Activity {
      * Called when the user clicks the Generate Password button
      */
     public void displayPassword(View view) {
-        PasswordGenerator generator = new PasswordGenerator(this, previewUrl);
+        PasswordGenerator generator = new PasswordGenerator(this, previewUrl,appName,masterId);
         String password = generator.generatePassword();
         int passwordLength = fetchPasswordLength();
         TextView tv = (TextView) findViewById(R.id.textView);
@@ -148,7 +152,7 @@ public class PasswordScreen extends Activity {
     public void openWebView(View view){
         Intent intent = new Intent(this, WebViewer.class);
         intent.putExtra(WEBSITE, appName);
-        intent.putExtra(PASSWORD,password);
+        intent.putExtra(PASSWORD, password);
         startActivity(intent);
     }
 }
