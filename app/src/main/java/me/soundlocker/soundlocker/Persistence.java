@@ -10,10 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ApplicationPersistence {
+public class Persistence {
 
     public static final String PREFS_NAME = "soundlocker";
     public static final String APPLICATION_LIST = "applications";
+    public static final String FIRST_BOOT = "firstBoot";
     private Gson gson = new Gson();
 
     public ArrayList<Application> getApplications(Context context) {
@@ -28,11 +29,27 @@ public class ApplicationPersistence {
         }
     }
 
+    public boolean getFirstBoot(Context context){
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        if (settings.contains(FIRST_BOOT)){
+            return settings.getBoolean(FIRST_BOOT,false);
+        } else {
+            return false;
+        }
+    }
+
     public void saveApplications(Context context, List<Application> applications) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
         String jsonFavorites = gson.toJson(applications);
         editor.putString(APPLICATION_LIST, jsonFavorites);
+        editor.commit();
+    }
+
+    public void saveFirstBoot(Context context, boolean firstBoot) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Editor editor = settings.edit();
+        editor.putBoolean(FIRST_BOOT, firstBoot);
         editor.commit();
     }
 

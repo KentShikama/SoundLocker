@@ -16,7 +16,8 @@ public class ApplicationsList extends ListActivity {
     private ArrayList<Application> applicationsList;
     private ArrayList<String> applicationsNameList;
     private ArrayAdapter<String> adapter;
-    private ApplicationPersistence storage = new ApplicationPersistence();
+    private Persistence storage = new Persistence();
+    private boolean firstBoot;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -26,6 +27,11 @@ public class ApplicationsList extends ListActivity {
         applicationsNameList = buildApplicationsNameList(applicationsList);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
         setListAdapter(adapter);
+
+        firstBoot = storage.getFirstBoot(this.getApplicationContext());
+        if (firstBoot == false){
+            storage.saveFirstBoot(ApplicationsList.this.getApplicationContext(), true);
+        }
     }
 
     private ArrayList<Application> buildApplicationsList() {

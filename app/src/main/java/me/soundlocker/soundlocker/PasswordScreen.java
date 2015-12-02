@@ -25,7 +25,7 @@ public class PasswordScreen extends Activity {
     private String previewUrl;
     private String appName;
     private String password = "";
-    private ApplicationPersistence storage = new ApplicationPersistence();
+    private Persistence storage = new Persistence();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +148,7 @@ public class PasswordScreen extends Activity {
     public void openWebView(View view){
         Intent intent = new Intent(this, WebViewer.class);
         intent.putExtra(WEBSITE, appName);
-        intent.putExtra(PASSWORD,password);
+        intent.putExtra(PASSWORD, password);
         startActivity(intent);
     }
 }
