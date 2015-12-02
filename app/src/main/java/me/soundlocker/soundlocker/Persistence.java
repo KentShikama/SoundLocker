@@ -15,6 +15,7 @@ public class Persistence {
     public static final String PREFS_NAME = "soundlocker";
     public static final String APPLICATION_LIST = "applications";
     public static final String FIRST_BOOT = "firstBoot";
+    public static final String MASTER_ID = "master_Id";
     private Gson gson = new Gson();
 
     public ArrayList<Application> getApplications(Context context) {
@@ -38,6 +39,15 @@ public class Persistence {
         }
     }
 
+    public String getMasterId(Context context){
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        if (settings.contains(MASTER_ID)){
+            return settings.getString(MASTER_ID,null);
+        } else {
+            return null;
+        }
+    }
+
     public void saveApplications(Context context, List<Application> applications) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
@@ -50,6 +60,13 @@ public class Persistence {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
         editor.putBoolean(FIRST_BOOT, firstBoot);
+        editor.commit();
+    }
+
+    public void saveMasterId(Context context, String masterId) {
+        SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        Editor editor = settings.edit();
+        editor.putString(MASTER_ID, masterId);
         editor.commit();
     }
 
