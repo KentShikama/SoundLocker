@@ -1,0 +1,23 @@
+{
+  "websites": [{
+    "shortname": "Facebook",
+    "loginUrl": "https://m.facebook.com",
+    "passwordFieldElement": "document.getElementsByName('pass')[0]"
+  }, {
+    "shortname": "Twitter",
+    "loginUrl": "https://mobile.twitter.com/session/new",
+    "passwordFieldElement": "document.getElementsByName('session[password]')[0]"
+  }, {
+    "shortname": "Amazon",
+    "loginUrl": "https://www.amazon.com/ap/signin?_encoding=UTF8&openid.assoc_handle=usflex&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.amazon.com%2F%3Fref_%3Dnav_ya_signin",
+    "passwordFieldElement": "document.getElementsByName('password')[0]"
+  }, {
+    "shortname": "Ebay",
+    "loginUrl": "https://signin.ebay.com/ws/eBayISAPI.dll?SignIn",
+    "passwordFieldElement": "document.getElementsByName('pass')[0]"
+  }, {
+    "shortname": "Instagram",
+    "loginUrl": "https://www.instagram.com",
+    "passwordFieldElement": "document.getElementsByName('password')[0]"
+  }]
+}
