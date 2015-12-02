@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -121,9 +120,6 @@ public class PasswordScreen extends Activity {
      * Called when the user clicks the Generate Password button
      */
     public void displayPassword(View view) {
-        Log.e("Test", "Pressed");
-        Log.e("Test", masterId);
-        Log.e("Test", "Pressed");
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl,appName,masterId);
         String password = generator.generatePassword();
         int passwordLength = fetchPasswordLength();
