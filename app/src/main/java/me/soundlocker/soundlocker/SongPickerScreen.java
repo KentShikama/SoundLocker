@@ -26,9 +26,11 @@ public class SongPickerScreen extends ListActivity {
     private static final String TAG = "SongPickerScreen";
     private static final String SONG_NAME = "song_name";
     private static final String PREVIEW_URL = "preview_url";
-    private static final String DEFAULT_SONG = "Native"; // To promote Native by One Republic
+    private static final String DEFAULT_SONG = "Native"; // the song album Native by One Republic
+    private static final String NO_UTF8 = "Device does not support UTF-8";
+    private static final String UTF8 = "UTF-8";
 
-    private ArrayList<ImmutablePair<String, Drawable>> songs = new ArrayList<>();
+    private ArrayList<ImmutablePair<String, Drawable>> songItemList = new ArrayList<>();
     private SongItemAdapter songsAdapter;
     private ArrayList<ImmutableTriple<String, URL, URL>> currentResults;
     private String appName;
@@ -38,36 +40,29 @@ public class SongPickerScreen extends ListActivity {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
         setContentView(R.layout.activity_song_picker_screen);
+        saveIntentExtras();
+        setUpSongListAdapter();
+        setUpSongQueryEditor();
+    }
+
+    private void saveIntentExtras() {
         Intent intent = getIntent();
         appName = intent.getStringExtra(ApplicationConstants.APP_NAME);
         masterId = intent.getStringExtra(ApplicationConstants.MASTER_ID);
         preregistered = intent.getBooleanExtra(ApplicationConstants.PREREGISTERED, false);
-
-        songsAdapter = new SongItemAdapter(this, songs);
-        setListAdapter(songsAdapter);
-        EditText songQueryEditor = (EditText) findViewById(R.id.song_query);
-        songQueryEditor.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String currentValue = editable.toString();
-                if (currentValue.length() >= 2) {
-                    String songName = buildURLSafeSongName(currentValue);
-                    SongSearcher task = new SongSearcher(SongPickerScreen.this);
-                    task.execute(songName);
-                    ArrayList<ImmutableTriple<String, URL, URL>> results = getSongUrls(task);
-                    updateList(results);
-                } else {
-                    clearList();
-                }
-            }
-        });
     }
+
+    private void setUpSongListAdapter() {
+        songsAdapter = new SongItemAdapter(this, songItemList);
+        setListAdapter(songsAdapter);
+    }
+
+    private void setUpSongQueryEditor() {
+        EditText songQueryEditor = (EditText) findViewById(R.id.song_query);
+        songQueryEditor.addTextChangedListener(new SongQueryWatcher());
+    }
+
     private ArrayList<ImmutableTriple<String, URL, URL>> getSongUrls(SongSearcher task) {
         ArrayList<ImmutableTriple<String, URL, URL>> urls = null;
         try {
@@ -80,40 +75,51 @@ public class SongPickerScreen extends ListActivity {
         return urls;
     }
 
+
     private String buildURLSafeSongName(String songName) {
         try {
-            return URLEncoder.encode(songName, "UTF-8");
+            return URLEncoder.encode(songName, UTF8);
         } catch (UnsupportedEncodingException e) {
-            Log.e(TAG, "Device does not support UTF-8");
+            Log.e(TAG, NO_UTF8);
         }
-        return DEFAULT_SONG;
+        return DEFAULT_SONG; // Returns the default song if URL safe song name cannot be created
     }
 
-    public void updateList(ArrayList<ImmutableTriple<String, URL, URL>> results) {
-        songs.clear();
+    public void updateSongList(ArrayList<ImmutableTriple<String, URL, URL>> results) {
+        songItemList.clear();
         if (results != null && !results.isEmpty()) {
             currentResults = results;
             for (ImmutableTriple<String, URL, URL> song : results) {
-                String songName = song.getLeft();
-                URL imageUrl = song.getRight();
-                SongImageDownloader imageDownloader = new SongImageDownloader(this);
-                imageDownloader.execute(imageUrl);
-                Drawable drawable = null;
-                try {
-                    drawable = imageDownloader.get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                songs.add(new ImmutablePair<>(songName, drawable));
+                ImmutablePair<String, Drawable> songItem = buildSongItem(song);
+                songItemList.add(songItem);
             }
             songsAdapter.notifyDataSetChanged();
         }
     }
 
+    private ImmutablePair<String, Drawable> buildSongItem(ImmutableTriple<String, URL, URL> song) {
+        String songName = song.getLeft();
+        URL imageUrl = song.getRight();
+        SongImageDownloader imageDownloader = new SongImageDownloader(this);
+        imageDownloader.execute(imageUrl);
+        Drawable drawable = buildDrawable(imageDownloader);
+        return new ImmutablePair<>(songName, drawable);
+    }
+
+    private Drawable buildDrawable(SongImageDownloader imageDownloader) {
+        Drawable drawable = null;
+        try {
+            drawable = imageDownloader.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return drawable;
+    }
+
     private void clearList() {
-        songs.clear();
+        songItemList.clear();
         songsAdapter.notifyDataSetChanged();
     }
 
@@ -121,6 +127,10 @@ public class SongPickerScreen extends ListActivity {
         ImmutableTriple<String, URL, URL> song = currentResults.get(position);
         String songName = song.getLeft();
         String previewUrl = song.getMiddle().toString();
+        goToPasswordScreen(songName, previewUrl);
+    }
+
+    private void goToPasswordScreen(String songName, String previewUrl) {
         Intent intent = new Intent(this, PasswordScreen.class);
         intent.putExtra(ApplicationConstants.APP_NAME, appName);
         intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
@@ -152,5 +162,33 @@ public class SongPickerScreen extends ListActivity {
         intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    private class SongQueryWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String currentValue = editable.toString();
+            if (currentValue.length() >= 2) {
+                searchForSongWithCurrentValue(currentValue);
+            } else {
+                clearList();
+            }
+        }
+
+        private void searchForSongWithCurrentValue(String currentValue) {
+            String songName = buildURLSafeSongName(currentValue);
+            SongSearcher task = new SongSearcher(SongPickerScreen.this);
+            task.execute(songName);
+            ArrayList<ImmutableTriple<String, URL, URL>> results = getSongUrls(task);
+            updateSongList(results);
+        }
     }
 }

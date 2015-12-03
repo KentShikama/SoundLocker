@@ -1,7 +1,8 @@
 package me.soundlocker.soundlocker;
 
 public class ApplicationConstants {
-    private ApplicationConstants() {}
+    private ApplicationConstants() {
+    }
 
     public static final String WEBSITE = "website";
     public static final String APP_NAME = "app_name";

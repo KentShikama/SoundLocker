@@ -10,10 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-// TODO: Create way to go backwards and pass back appName, preregistered, and songName
 public class PasswordConfirmationScreen extends Activity {
 
-    private static final String LABEL = "label";
+    private static final String CLIPBOARD_LABEL = "label";
     private final String INSERT_PASSWORD_TO_WEBVIEW = "Insert Password Into Website";
     private final String COPY_TO_CLIPBOARD = "Copy Password To Clipboard";
 
@@ -34,6 +33,33 @@ public class PasswordConfirmationScreen extends Activity {
     protected void onResume() {
         super.onResume();
         setInitialValues();
+    }
+
+    /**
+     * insertPasswordOrCopyToClipboard is called when the user
+     * clicks the Copy to Clipboard or Insert Password Into Application
+     */
+    public void insertPasswordOrCopyToClipboard(View view) {
+        if (preregistered) {
+            insertPasswordToWebView();
+        } else {
+            copyToClipboard();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                goToPasswordScreen();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        goToPasswordScreen();
     }
 
     private void setInitialValues() {
@@ -61,48 +87,26 @@ public class PasswordConfirmationScreen extends Activity {
         }
     }
 
-    /**
-     * insertPasswordOrCopyToClipboard is called when the user
-     * clicks the Copy to Clipboard or Insert Password Into Application
-     */
-    public void insertPasswordOrCopyToClipboard(View view) {
-        if (preregistered) {
-            insertPasswordToWebView();
-        } else {
-            copyToClipboard();
-        }
-    }
-
-    private void insertPasswordToWebView(){
+    private void insertPasswordToWebView() {
         Intent intent = new Intent(this, WebViewer.class);
         intent.putExtra(ApplicationConstants.WEBSITE, appName);
         intent.putExtra(ApplicationConstants.PASSWORD, password);
         startActivity(intent);
     }
 
-    private void copyToClipboard(){
+    private void copyToClipboard() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(LABEL, password);
+        ClipData clip = ClipData.newPlainText(CLIPBOARD_LABEL, password);
         clipboard.setPrimaryClip(clip);
-        // TODO: Set intent back to application list
+        goToApplicationsListScreen();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                sendOnBackData();
-                break;
-        }
-        return true;
+    private void goToApplicationsListScreen() {
+        Intent intent = new Intent(this, ApplicationsList.class);
+        startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        sendOnBackData();
-    }
-
-    private void sendOnBackData() {
+    private void goToPasswordScreen() {
         Intent intent = new Intent();
         intent.putExtra(ApplicationConstants.APP_NAME, appName);
         intent.putExtra(ApplicationConstants.SONG_NAME, songName);

@@ -45,13 +45,13 @@ public class StorageWrapper {
     public static boolean getFirstBoot(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         if (settings.contains(FIRST_BOOT)) {
-            return settings.getBoolean(FIRST_BOOT, false);
+            return settings.getBoolean(FIRST_BOOT, true);
         } else {
-            return false;
+            return true;
         }
     }
 
-    public String getMasterId(Context context) {
+    public static String getMasterId(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         if (settings.contains(MASTER_ID)) {
             return settings.getString(MASTER_ID, null);
@@ -95,7 +95,7 @@ public class StorageWrapper {
             applications = new ArrayList<>();
         }
         for (Application application : applications) {
-            if (application.applicationName.equals(newApplication.applicationName)) {
+            if (application.getApplicationName().equals(newApplication.getApplicationName())) {
                 return false;
             }
         }
@@ -117,8 +117,8 @@ public class StorageWrapper {
             applications = new ArrayList<>();
         }
         for (Application application : applications) {
-            if (application.applicationName.equals(applicationName)) {
-                return application.passwordLength;
+            if (application.getApplicationName().equals(applicationName)) {
+                return application.getPasswordLength();
             }
         }
         return -1;
@@ -135,8 +135,8 @@ public class StorageWrapper {
     public static boolean saveApplicationPasswordLength(Context context, String applicationName, int newPasswordLength) {
         List<Application> applications = getApplications(context);
         for (Application application : applications) {
-            if (application.applicationName.equals(applicationName)) {
-                application.passwordLength = newPasswordLength;
+            if (application.getApplicationName().equals(applicationName)) {
+                application.setPasswordLength(newPasswordLength);
                 saveApplications(context, applications);
                 return true;
             }
@@ -154,22 +154,31 @@ public class StorageWrapper {
 
     public static ArrayList<Website> getWebsites(Context context) {
         String jsonString = JSONReader.loadJSONFromAsset(context);
+        ArrayList<Website> websites = buildWebsites(jsonString);
+        return websites;
+    }
+
+    private static ArrayList<Website> buildWebsites(String jsonString) {
         ArrayList<Website> websites = new ArrayList<>();
         try {
             JSONObject jsonobject = new JSONObject(jsonString);
             JSONArray jsonWebsites = jsonobject.getJSONArray(WEBSITES);
-            for (int i = 0; i < jsonWebsites.length(); i++) {
-                JSONObject jsonWebsite = (JSONObject) jsonWebsites.get(i);
-                String shortname = jsonWebsite.getString(SHORT_NAME);
-                String loginUrl = jsonWebsite.getString(LOGIN_URL);
-                String passwordFieldElement = jsonWebsite.getString(PASSWORD_FIELD_ELEMENT);
-                Website website = new Website(shortname, loginUrl, passwordFieldElement);
+            for (int position = 0; position < jsonWebsites.length(); position++) {
+                Website website = readWebsite(jsonWebsites, position);
                 websites.add(website);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return websites;
+    }
+
+    private static Website readWebsite(JSONArray jsonWebsites, int i) throws JSONException {
+        JSONObject jsonWebsite = (JSONObject) jsonWebsites.get(i);
+        String shortname = jsonWebsite.getString(SHORT_NAME);
+        String loginUrl = jsonWebsite.getString(LOGIN_URL);
+        String passwordFieldElement = jsonWebsite.getString(PASSWORD_FIELD_ELEMENT);
+        return new Website(shortname, loginUrl, passwordFieldElement);
     }
 
     public static boolean isPreregistered(Context context, String applicationName) {

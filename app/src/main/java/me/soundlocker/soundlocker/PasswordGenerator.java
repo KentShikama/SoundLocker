@@ -14,9 +14,12 @@ import java.util.concurrent.ExecutionException;
 
 public class PasswordGenerator {
     private static final String TAG = "PasswordGenerator";
+    private static final String BLANK_LINES = "--------------";
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
     private final PasswordScreen passwordScreen;
     private final String previewStringURL;
-    private final String BLANK_LINES = "--------------";
+    private final String SHA_256 = "SHA-256";
     private String appName;
     private String masterId;
 
@@ -54,9 +57,9 @@ public class PasswordGenerator {
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
         if (songByteData == null) {
-            return "--------------";
+            return BLANK_LINES;
         } else {
-            String password = hash(ArrayUtils.toPrimitive(songByteData));
+            String password = generatePasswordFromSongByteData(ArrayUtils.toPrimitive(songByteData));
             return password;
         }
     }
@@ -73,46 +76,45 @@ public class PasswordGenerator {
         return songByteData;
     }
 
-    /**
-     * @param data the byte[] from the song
-     * @return byte[] created hashing song bytes
-     */
-    private String hash(byte[] data) {
-        byte[] passBytes = hash256(data);
-        String password = bytesToString(passBytes);
+    private String generatePasswordFromSongByteData(byte[] songByteData) {
+        byte[] hashedByteData = hashByteData(songByteData);
+        String password = convertBytesToString(hashedByteData);
         return password;
     }
 
-    private byte[] hash256(byte[] data) {
-        MessageDigest md = getMessageDigest();
-        md.update(data);
+    private byte[] hashByteData(byte[] data) {
+        MessageDigest md = buildMessageDigest(data);
+        byte[] hashedByteData = md.digest();
+        return hashedByteData;
+    }
+
+    private MessageDigest buildMessageDigest(byte[] data) {
+        MessageDigest md = buildMessageDigestAux();
         try {
-            md.update(Hex.decodeHex(appName.toCharArray()));
-            md.update(Hex.decodeHex(masterId.toCharArray()));
+            md.update(data);
+            md.update(convertStringToHex(appName));
+            md.update(convertStringToHex(masterId));
         } catch (DecoderException e) {
             e.printStackTrace();
         }
-
-        byte[] passBytes = md.digest();
-        return passBytes;
+        return md;
     }
 
-    private MessageDigest getMessageDigest() {
+    private MessageDigest buildMessageDigestAux() {
         MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance(SHA_256);
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, e.getMessage());
         }
         return md;
     }
 
-    /**
-     * @param bytes - the byte array generated using hash
-     * @return the array displayed as a hex string
-     */
-    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-    private String bytesToString(byte[] bytes) {
+    private byte[] convertStringToHex(String string) throws DecoderException {
+        return Hex.decodeHex(string.toCharArray());
+    }
+
+    private String convertBytesToString(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;

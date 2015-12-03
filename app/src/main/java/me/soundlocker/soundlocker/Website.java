@@ -5,7 +5,7 @@ public class Website {
     private String loginUrl;
     private String passwordFieldElement;
 
-    Website (String shortname, String loginUrl, String passwordFieldElement) {
+    Website(String shortname, String loginUrl, String passwordFieldElement) {
         this.shortname = shortname;
         this.loginUrl = loginUrl;
         this.passwordFieldElement = passwordFieldElement;
