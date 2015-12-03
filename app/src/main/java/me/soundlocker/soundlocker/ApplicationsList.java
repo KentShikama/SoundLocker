@@ -38,6 +38,8 @@ public class ApplicationsList extends ListActivity {
             masterId = new BigInteger(256, random).toString(32);
             storage.saveMasterId(ApplicationsList.this.getApplicationContext(),masterId);
             storage.saveFirstBoot(ApplicationsList.this.getApplicationContext(), true);
+        } else {
+            masterId = storage.getMasterId(ApplicationsList.this.getApplicationContext());
         }
     }
 
