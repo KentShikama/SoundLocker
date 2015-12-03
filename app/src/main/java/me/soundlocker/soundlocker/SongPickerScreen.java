@@ -1,5 +1,6 @@
 package me.soundlocker.soundlocker;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -7,12 +8,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -25,14 +27,13 @@ public class SongPickerScreen extends ListActivity {
     private static final String SONG_NAME = "song_name";
     private static final String PREVIEW_URL = "preview_url";
     private static final String DEFAULT_SONG = "Native"; // To promote Native by One Republic
-    private static final String APP_NAME = "app_name";
-    private static final String MASTER_ID = "master_id";
 
     private ArrayList<ImmutablePair<String, Drawable>> songs = new ArrayList<>();
     private SongItemAdapter songsAdapter;
     private ArrayList<ImmutableTriple<String, URL, URL>> currentResults;
     private String appName;
     private String masterId;
+    private boolean preregistered;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -40,8 +41,9 @@ public class SongPickerScreen extends ListActivity {
 
         setContentView(R.layout.activity_song_picker_screen);
         Intent intent = getIntent();
-        appName = intent.getStringExtra(APP_NAME);
-        masterId = intent.getStringExtra(MASTER_ID);
+        appName = intent.getStringExtra(ApplicationConstants.APP_NAME);
+        masterId = intent.getStringExtra(ApplicationConstants.MASTER_ID);
+        preregistered = intent.getBooleanExtra(ApplicationConstants.PREREGISTERED, false);
 
         songsAdapter = new SongItemAdapter(this, songs);
         setListAdapter(songsAdapter);
@@ -104,7 +106,7 @@ public class SongPickerScreen extends ListActivity {
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-                songs.add(new ImmutablePair<String, Drawable>(songName, drawable));
+                songs.add(new ImmutablePair<>(songName, drawable));
             }
             songsAdapter.notifyDataSetChanged();
         }
@@ -120,10 +122,35 @@ public class SongPickerScreen extends ListActivity {
         String songName = song.getLeft();
         String previewUrl = song.getMiddle().toString();
         Intent intent = new Intent(this, PasswordScreen.class);
-        intent.putExtra(APP_NAME, appName);
+        intent.putExtra(ApplicationConstants.APP_NAME, appName);
+        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
+        intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
         intent.putExtra(SONG_NAME, songName);
         intent.putExtra(PREVIEW_URL, previewUrl);
-        intent.putExtra(MASTER_ID, masterId);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                sendOnBackData();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        sendOnBackData();
+    }
+
+    private void sendOnBackData() {
+        Intent intent = new Intent();
+        intent.putExtra(ApplicationConstants.APP_NAME, appName);
+        intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
+        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 }

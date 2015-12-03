@@ -23,8 +23,7 @@ public class ApplicationAdder extends Activity {
         return new View.OnClickListener() {
             public void onClick(View v) {
                 String appName = getAppName();
-                Persistence storage = new Persistence();
-                boolean successful = storage.addApplication(ApplicationAdder.this.getApplicationContext(), new Application(appName, DEFAULT_PASSWORD_LENGTH));
+                boolean successful = StorageWrapper.addApplication(ApplicationAdder.this.getApplicationContext(), new Application(appName, DEFAULT_PASSWORD_LENGTH));
                 if (successful) {
                     Intent intent = new Intent(ApplicationAdder.this, ApplicationsList.class);
                     startActivity(intent);

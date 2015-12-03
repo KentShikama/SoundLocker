@@ -1,8 +1,6 @@
 package me.soundlocker.soundlocker;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,42 +11,46 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 public class PasswordScreen extends Activity {
-    private static final String APP_NAME = "app_name";
     private static final String SONG_NAME = "song_name";
     private static final String PREVIEW_URL = "preview_url";
-    private static final String WEBSITE = "website";
-    private static final String LABEL = "label";
-    private static final String PASSWORD = "password";
-    private static final String MASTER_ID = "master_id";
     private static final int DEFAULT_PASSWORD_LENGTH = 10;
     private static final int MINIMUM_PASSWORD_LENGTH = 3;
     private static final int MAXIMUM_PASSWORD_LENGTH = 10;
     private String previewUrl;
     private String appName;
-    private String password = "";
-    private String masterId = "";
-    private Persistence storage = new Persistence();
+    private String password;
+    private String masterId;
+    private boolean preregistered;
+    private String songName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_screen);
-        setInitialValues();
+        Intent intent = getIntent();
+        setInitialValues(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setInitialValues();
+        Intent intent = getIntent();
+        setInitialValues(intent);
     }
 
-    private void setInitialValues() {
-        Intent intent = getIntent();
+    private void setInitialValues(Intent intent) {
         setTitle(intent);
         setSongName(intent);
         setPasswordLength();
         previewUrl = intent.getStringExtra(PREVIEW_URL);
-        masterId = intent.getStringExtra(MASTER_ID);
+        masterId = intent.getStringExtra(ApplicationConstants.MASTER_ID);
+        preregistered = intent.getBooleanExtra(ApplicationConstants.PREREGISTERED, false);
+    }
+
+    private void setTitle(Intent intent) {
+        appName = intent.getStringExtra(ApplicationConstants.APP_NAME);
+        TextView title = (TextView) findViewById(R.id.textView);
+        title.setText(appName);
     }
 
     private void setPasswordLength() {
@@ -60,13 +62,13 @@ public class PasswordScreen extends Activity {
         passwordLengthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                storage.saveApplicationPasswordLength(PasswordScreen.this.getApplicationContext(), appName, newVal);
+                StorageWrapper.saveApplicationPasswordLength(PasswordScreen.this.getApplicationContext(), appName, newVal);
             }
         });
     }
 
     private int getPasswordLength() {
-        int passwordLength = storage.getApplicationPasswordLength(this, appName);
+        int passwordLength = StorageWrapper.getApplicationPasswordLength(this, appName);
         if (passwordLength == -1) {
             passwordLength = DEFAULT_PASSWORD_LENGTH;
         }
@@ -74,17 +76,11 @@ public class PasswordScreen extends Activity {
     }
 
     private void setSongName(Intent intent) {
-        String songName = intent.getStringExtra(SONG_NAME);
+        songName = intent.getStringExtra(SONG_NAME);
         if (songName != null) {
             Button chooseSongButton = (Button) findViewById(R.id.chooseSong);
             chooseSongButton.setText(songName);
         }
-    }
-
-    private void setTitle(Intent intent) {
-        appName = intent.getStringExtra(APP_NAME);
-        TextView title = (TextView) findViewById(R.id.textView);
-        title.setText(appName);
     }
 
     @Override
@@ -111,21 +107,25 @@ public class PasswordScreen extends Activity {
      */
     public void showSongPicker(View view) {
         Intent intent = new Intent(this, SongPickerScreen.class);
-        intent.putExtra(APP_NAME, appName);
-        intent.putExtra(MASTER_ID, masterId);
+        intent.putExtra(ApplicationConstants.APP_NAME, appName);
+        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
+        intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
         startActivity(intent);
     }
 
     /**
      * Called when the user clicks the Generate Password button
      */
-    public void displayPassword(View view) {
-        PasswordGenerator generator = new PasswordGenerator(this, previewUrl,appName,masterId);
-        String password = generator.generatePassword();
+    public void generatePasswordAndContinue(View view) {
+        generatePassword();
+        showPasswordConfirmationScreen();
+    }
+
+    private void generatePassword() {
+        PasswordGenerator generator = new PasswordGenerator(this, previewUrl, appName, masterId);
+        String longPassword = generator.generatePassword();
         int passwordLength = fetchPasswordLength();
-        TextView tv = (TextView) findViewById(R.id.textView);
-        this.password = password.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength));
-        tv.setText(this.password);
+        password = longPassword.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength));
     }
 
     private int fetchPasswordLength() {
@@ -134,25 +134,23 @@ public class PasswordScreen extends Activity {
         return passwordLengthString;
     }
 
-    /**
-     * Called when users clicks the Copy to Clipboard button. Will take text from textView and copy.
-     */
-    public void copyToClipboard(View view){
-        TextView tv = (TextView)findViewById(R.id.textView);
-        String text = tv.getText().toString();
-
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText(LABEL, text);
-        clipboard.setPrimaryClip(clip);
+    private void showPasswordConfirmationScreen() {
+        Intent intent = new Intent(this, PasswordConfirmationScreen.class);
+        intent.putExtra(ApplicationConstants.APP_NAME, appName);
+        intent.putExtra(ApplicationConstants.SONG_NAME, songName);
+        intent.putExtra(ApplicationConstants.PASSWORD, password);
+        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
+        intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
+        startActivity(intent);
     }
 
-    /**
-     * Called when users click the Open Web View button.
-     */
-    public void openWebView(View view){
-        Intent intent = new Intent(this, WebViewer.class);
-        intent.putExtra(WEBSITE, appName);
-        intent.putExtra(PASSWORD, password);
-        startActivity(intent);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                setInitialValues(intent);
+            }
+        }
     }
 }

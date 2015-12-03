@@ -16,21 +16,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class UITest {
+public class PasswordScreenTest {
 
     @Rule
-    public ActivityTestRule<PasswordScreen> mActivityRule = new ActivityTestRule(PasswordScreen.class);
+    public ActivityTestRule<PasswordScreen> rule = new ActivityTestRule(PasswordScreen.class);
 
     @Test
     public void checkSelectedAppNameDisplayed() {
-        onView(withId(R.id.textView))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.textView)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void checkCopy() {
-        onView(withId(R.id.copy))               // withId(R.id.my_view) is a ViewMatcher
-                .perform(click())               // click() is a ViewAction
-                .check(matches(isDisplayed())); // matches(isDisplayed()) is a ViewAssertion
+    public void checkChooseSongOpensSongPickerScreen() {
+        onView(withId(R.id.chooseSong)).perform(click());
+        onView(withId(R.id.song_query)).check(matches(isDisplayed()));
     }
 }

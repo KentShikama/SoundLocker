@@ -2,6 +2,8 @@ package me.soundlocker.soundlocker;
 
 import android.util.Log;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.net.MalformedURLException;
@@ -84,8 +86,12 @@ public class PasswordGenerator {
     private byte[] hash256(byte[] data) {
         MessageDigest md = getMessageDigest();
         md.update(data);
-        md.update(this.appName.getBytes());
-        md.update(this.masterId.getBytes());
+        try {
+            md.update(Hex.decodeHex(appName.toCharArray()));
+            md.update(Hex.decodeHex(masterId.toCharArray()));
+        } catch (DecoderException e) {
+            e.printStackTrace();
+        }
 
         byte[] passBytes = md.digest();
         return passBytes;

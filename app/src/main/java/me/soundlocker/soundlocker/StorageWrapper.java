@@ -6,19 +6,31 @@ import android.content.SharedPreferences.Editor;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Persistence {
+import vendor.JSONReader;
 
-    public static final String PREFS_NAME = "soundlocker";
-    public static final String APPLICATION_LIST = "applications";
-    public static final String FIRST_BOOT = "firstBoot";
-    public static final String MASTER_ID = "master_Id";
-    private Gson gson = new Gson();
+public class StorageWrapper {
 
-    public ArrayList<Application> getApplications(Context context) {
+    private static final String PREFS_NAME = "soundlocker";
+    private static final String APPLICATION_LIST = "applications";
+    private static final String FIRST_BOOT = "firstBoot";
+    private static final String MASTER_ID = "master_Id";
+    private static final String WEBSITES = "websites";
+    private static final String SHORT_NAME = "shortname";
+    private static final String LOGIN_URL = "loginUrl";
+    private static final String PASSWORD_FIELD_ELEMENT = "passwordFieldElement";
+    private static Gson gson = new Gson();
+
+    private StorageWrapper() {}
+
+    public static ArrayList<Application> getApplications(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         if (settings.contains(APPLICATION_LIST)) {
             String jsonFavorites = settings.getString(APPLICATION_LIST, null);
@@ -30,25 +42,25 @@ public class Persistence {
         }
     }
 
-    public boolean getFirstBoot(Context context){
+    public static boolean getFirstBoot(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        if (settings.contains(FIRST_BOOT)){
-            return settings.getBoolean(FIRST_BOOT,false);
+        if (settings.contains(FIRST_BOOT)) {
+            return settings.getBoolean(FIRST_BOOT, false);
         } else {
             return false;
         }
     }
 
-    public String getMasterId(Context context){
+    public String getMasterId(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        if (settings.contains(MASTER_ID)){
-            return settings.getString(MASTER_ID,null);
+        if (settings.contains(MASTER_ID)) {
+            return settings.getString(MASTER_ID, null);
         } else {
             return null;
         }
     }
 
-    public void saveApplications(Context context, List<Application> applications) {
+    public static void saveApplications(Context context, List<Application> applications) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
         String jsonFavorites = gson.toJson(applications);
@@ -56,14 +68,14 @@ public class Persistence {
         editor.commit();
     }
 
-    public void saveFirstBoot(Context context, boolean firstBoot) {
+    public static void saveFirstBoot(Context context, boolean firstBoot) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
         editor.putBoolean(FIRST_BOOT, firstBoot);
         editor.commit();
     }
 
-    public void saveMasterId(Context context, String masterId) {
+    public static void saveMasterId(Context context, String masterId) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
         editor.putString(MASTER_ID, masterId);
@@ -72,11 +84,12 @@ public class Persistence {
 
     /**
      * addApplication Adds a new application to the application list in storage
-     * @param context The current application context
+     *
+     * @param context        The current application context
      * @param newApplication The application to add
      * @return true if successfully added
      */
-    public boolean addApplication(Context context, Application newApplication) {
+    public static boolean addApplication(Context context, Application newApplication) {
         List<Application> applications = getApplications(context);
         if (applications == null) {
             applications = new ArrayList<>();
@@ -93,11 +106,12 @@ public class Persistence {
 
     /**
      * getApplicationPasswordLength Gets the password length for an application
-     * @param context The current application context
+     *
+     * @param context         The current application context
      * @param applicationName The name of the application to update the password length for
      * @return the application's password length or -1 if not obtainable
      */
-    public int getApplicationPasswordLength(Context context, String applicationName) {
+    public static int getApplicationPasswordLength(Context context, String applicationName) {
         List<Application> applications = getApplications(context);
         if (applications == null) {
             applications = new ArrayList<>();
@@ -112,12 +126,13 @@ public class Persistence {
 
     /**
      * saveApplicationPasswordLength Updates the password length for an application
-     * @param context The current application context
-     * @param applicationName The name of the application to update the password length for
+     *
+     * @param context           The current application context
+     * @param applicationName   The name of the application to update the password length for
      * @param newPasswordLength The new password length for this application
      * @return true if successfully updated
      */
-    public boolean saveApplicationPasswordLength(Context context, String applicationName, int newPasswordLength) {
+    public static boolean saveApplicationPasswordLength(Context context, String applicationName, int newPasswordLength) {
         List<Application> applications = getApplications(context);
         for (Application application : applications) {
             if (application.applicationName.equals(applicationName)) {
@@ -135,5 +150,45 @@ public class Persistence {
             applications.remove(application);
             saveApplications(context, applications);
         }
+    }
+
+    public static ArrayList<Website> getWebsites(Context context) {
+        String jsonString = JSONReader.loadJSONFromAsset(context);
+        ArrayList<Website> websites = new ArrayList<>();
+        try {
+            JSONObject jsonobject = new JSONObject(jsonString);
+            JSONArray jsonWebsites = jsonobject.getJSONArray(WEBSITES);
+            for (int i = 0; i < jsonWebsites.length(); i++) {
+                JSONObject jsonWebsite = (JSONObject) jsonWebsites.get(i);
+                String shortname = jsonWebsite.getString(SHORT_NAME);
+                String loginUrl = jsonWebsite.getString(LOGIN_URL);
+                String passwordFieldElement = jsonWebsite.getString(PASSWORD_FIELD_ELEMENT);
+                Website website = new Website(shortname, loginUrl, passwordFieldElement);
+                websites.add(website);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return websites;
+    }
+
+    public static boolean isPreregistered(Context context, String applicationName) {
+        ArrayList<Website> websites = getWebsites(context);
+        for (Website website : websites) {
+            if (website.getShortname().equals(applicationName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Website getWebsite(Context context, String applicationName) {
+        ArrayList<Website> websites = getWebsites(context);
+        for (Website website : websites) {
+            if (website.getShortname().equals(applicationName)) {
+                return website;
+            }
+        }
+        return null;
     }
 }

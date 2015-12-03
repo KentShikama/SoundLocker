@@ -8,9 +8,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class WebViewer extends Activity {
-    private static final String PASSWORD = "password";
-    private static final String WEBSITE = "website";
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setInitialValues();
@@ -23,19 +20,20 @@ public class WebViewer extends Activity {
 
     private void setInitialValues() {
         Intent intent = getIntent();
-        final String website = intent.getStringExtra(WEBSITE);
-        final String password = intent.getStringExtra(PASSWORD);
+        final String websiteString = intent.getStringExtra(ApplicationConstants.WEBSITE);
+        final String password = intent.getStringExtra(ApplicationConstants.PASSWORD);
 
         WebView webview = new WebView(this);
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
-        webview.loadUrl("https://www.facebook.com");
+        final Website website = StorageWrapper.getWebsite(this.getApplicationContext(), websiteString);
+        webview.loadUrl(website.getLoginUrl());
         setContentView(webview);
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                view.evaluateJavascript("document.getElementsByName('pass')[0].value = '" + password + "';", null);
+                view.evaluateJavascript(website.getPasswordFieldElement() + ".value = '" + password + "';", null);
             }
         });
     }
