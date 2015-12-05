@@ -3,18 +3,18 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
-        android:id="@+id/song_img"
+        android:id="@+id/songImage"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_alignParentLeft="true"
         android:nestedScrollingEnabled="false"
         android:padding="10dp" />
     <TextView
-        android:id="@+id/song_name"
+        android:id="@+id/songName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/song_img"
-        android:layout_toRightOf="@+id/song_img"
+        android:layout_alignTop="@+id/songImage"
+        android:layout_toRightOf="@+id/songImage"
         android:padding="10dp"
         android:textSize="18dp"
         android:layout_gravity="center_vertical" />

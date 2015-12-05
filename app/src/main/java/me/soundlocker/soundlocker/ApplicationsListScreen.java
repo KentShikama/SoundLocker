@@ -45,7 +45,7 @@ public class ApplicationsListScreen extends ListActivity {
     }
 
     private void styleActionButton() {
-        ActionButton actionButton = (ActionButton) findViewById(R.id.addBtn);
+        ActionButton actionButton = (ActionButton) findViewById(R.id.addApplicationButton);
         actionButton.setType(ActionButton.Type.DEFAULT);
         actionButton.setButtonColor(getResources().getColor(R.color.fab_material_red_500));
         actionButton.setImageResource(R.drawable.fab_plus_icon);

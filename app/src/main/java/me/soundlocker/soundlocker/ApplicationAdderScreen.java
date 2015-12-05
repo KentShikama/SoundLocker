@@ -19,7 +19,7 @@ public class ApplicationAdderScreen extends Activity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_application_adder);
-        final Button addAppButton = (Button) findViewById(R.id.addApp);
+        final Button addAppButton = (Button) findViewById(R.id.addApplication);
         addAppButton.setOnClickListener(addAppListener());
         ArrayList<String> websiteNames = StorageWrapper.getWebsiteNames(this.getApplicationContext());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, websiteNames);

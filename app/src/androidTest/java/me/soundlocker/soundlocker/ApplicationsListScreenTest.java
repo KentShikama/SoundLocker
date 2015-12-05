@@ -37,11 +37,11 @@ public class ApplicationsListScreenTest {
     }
 
     public void selectedAddBtnDisplayed() {
-        onView(withId(R.id.addBtn)).check(matches(isDisplayed()));
+        onView(withId(R.id.addApplicationButton)).check(matches(isDisplayed()));
     }
 
     public void clickingAddBtnBringsUserToApplicationAdderScreen() {
-        onView(withId(R.id.addBtn)).perform(click());
-        onView(withId(R.id.addApp)).check(matches(isDisplayed()));
+        onView(withId(R.id.addApplicationButton)).perform(click());
+        onView(withId(R.id.addApplication)).check(matches(isDisplayed()));
     }
 }
