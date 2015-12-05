@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import me.soundlocker.soundlocker.models.Application;
+import me.soundlocker.soundlocker.models.PreregisteredWebsite;
 import vendor.JSONReader;
 
 public class StorageWrapper {
@@ -152,60 +154,60 @@ public class StorageWrapper {
         }
     }
 
-    public static ArrayList<Website> getWebsites(Context context) {
+    public static ArrayList<PreregisteredWebsite> getWebsites(Context context) {
         String jsonString = JSONReader.loadJSONFromAsset(context);
-        ArrayList<Website> websites = buildWebsites(jsonString);
-        return websites;
+        ArrayList<PreregisteredWebsite> preregisteredWebsites = buildWebsites(jsonString);
+        return preregisteredWebsites;
     }
 
     public static ArrayList<String> getWebsiteNames(Context context) {
         String jsonString = JSONReader.loadJSONFromAsset(context);
-        ArrayList<Website> websites = buildWebsites(jsonString);
+        ArrayList<PreregisteredWebsite> preregisteredWebsites = buildWebsites(jsonString);
         ArrayList<String> websiteNames = new ArrayList<>();
-        for (Website website : websites) {
-            websiteNames.add(website.getShortname());
+        for (PreregisteredWebsite preregisteredWebsite : preregisteredWebsites) {
+            websiteNames.add(preregisteredWebsite.getShortName());
         }
         return websiteNames;
     }
 
-    private static ArrayList<Website> buildWebsites(String jsonString) {
-        ArrayList<Website> websites = new ArrayList<>();
+    private static ArrayList<PreregisteredWebsite> buildWebsites(String jsonString) {
+        ArrayList<PreregisteredWebsite> preregisteredWebsites = new ArrayList<>();
         try {
             JSONObject jsonobject = new JSONObject(jsonString);
             JSONArray jsonWebsites = jsonobject.getJSONArray(WEBSITES);
             for (int position = 0; position < jsonWebsites.length(); position++) {
-                Website website = readWebsite(jsonWebsites, position);
-                websites.add(website);
+                PreregisteredWebsite preregisteredWebsite = readWebsite(jsonWebsites, position);
+                preregisteredWebsites.add(preregisteredWebsite);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return websites;
+        return preregisteredWebsites;
     }
 
-    private static Website readWebsite(JSONArray jsonWebsites, int i) throws JSONException {
+    private static PreregisteredWebsite readWebsite(JSONArray jsonWebsites, int i) throws JSONException {
         JSONObject jsonWebsite = (JSONObject) jsonWebsites.get(i);
         String shortname = jsonWebsite.getString(SHORT_NAME);
         String loginUrl = jsonWebsite.getString(LOGIN_URL);
         String passwordFieldElement = jsonWebsite.getString(PASSWORD_FIELD_ELEMENT);
-        return new Website(shortname, loginUrl, passwordFieldElement);
+        return new PreregisteredWebsite(shortname, loginUrl, passwordFieldElement);
     }
 
     public static boolean isPreregistered(Context context, String applicationName) {
-        ArrayList<Website> websites = getWebsites(context);
-        for (Website website : websites) {
-            if (website.getShortname().equals(applicationName)) {
+        ArrayList<PreregisteredWebsite> preregisteredWebsites = getWebsites(context);
+        for (PreregisteredWebsite preregisteredWebsite : preregisteredWebsites) {
+            if (preregisteredWebsite.getShortName().equals(applicationName)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static Website getWebsite(Context context, String applicationName) {
-        ArrayList<Website> websites = getWebsites(context);
-        for (Website website : websites) {
-            if (website.getShortname().equals(applicationName)) {
-                return website;
+    public static PreregisteredWebsite getWebsite(Context context, String applicationName) {
+        ArrayList<PreregisteredWebsite> preregisteredWebsites = getWebsites(context);
+        for (PreregisteredWebsite preregisteredWebsite : preregisteredWebsites) {
+            if (preregisteredWebsite.getShortName().equals(applicationName)) {
+                return preregisteredWebsite;
             }
         }
         return null;

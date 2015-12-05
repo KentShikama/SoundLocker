@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.ui;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -13,7 +13,12 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
-public class ApplicationsListScreen extends ListActivity {
+import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.StorageWrapper;
+import me.soundlocker.soundlocker.models.Application;
+import me.soundlocker.soundlocker.ApplicationConstants;
+
+public class ApplicationsList extends ListActivity {
     private ArrayList<Application> applicationsList;
     private ArrayList<String> applicationsNameList;
     private ArrayAdapter<String> adapter;
@@ -68,7 +73,7 @@ public class ApplicationsListScreen extends ListActivity {
     }
 
     public void addItems(View v) {
-        Intent intent = new Intent(this, ApplicationAdderScreen.class);
+        Intent intent = new Intent(this, ApplicationAdder.class);
         startActivity(intent);
     }
 
@@ -79,7 +84,7 @@ public class ApplicationsListScreen extends ListActivity {
     }
 
     private void goToPasswordScreen(String applicationName) {
-        Intent intent = new Intent(this, PasswordScreen.class);
+        Intent intent = new Intent(this, PasswordGenerationSettings.class);
         boolean isPreregistered = StorageWrapper.isPreregistered(this.getApplicationContext(), applicationName);
         intent.putExtra(ApplicationConstants.APP_NAME, applicationName);
         intent.putExtra(ApplicationConstants.MASTER_ID, masterId);

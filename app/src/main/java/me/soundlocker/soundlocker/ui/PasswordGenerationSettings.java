@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,12 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-public class PasswordScreen extends Activity {
+import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.tasks.PasswordGenerator;
+import me.soundlocker.soundlocker.StorageWrapper;
+
+public class PasswordGenerationSettings extends Activity {
     private static final String SONG_NAME = "song_name";
     private static final String PREVIEW_URL = "preview_url";
     private static final int DEFAULT_PASSWORD_LENGTH = 10;
@@ -60,7 +65,7 @@ public class PasswordScreen extends Activity {
         passwordLengthPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                StorageWrapper.saveApplicationPasswordLength(PasswordScreen.this.getApplicationContext(), appName, newVal);
+                StorageWrapper.saveApplicationPasswordLength(PasswordGenerationSettings.this.getApplicationContext(), appName, newVal);
             }
         });
     }
@@ -85,7 +90,7 @@ public class PasswordScreen extends Activity {
      * Called when the user clicks the Choose Song button
      */
     public void showSongPicker(View view) {
-        Intent intent = new Intent(this, SongPickerScreen.class);
+        Intent intent = new Intent(this, SongPicker.class);
         intent.putExtra(ApplicationConstants.APP_NAME, appName);
         intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
         intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
@@ -114,7 +119,7 @@ public class PasswordScreen extends Activity {
     }
 
     private void showPasswordConfirmationScreen() {
-        Intent intent = new Intent(this, PasswordConfirmationScreen.class);
+        Intent intent = new Intent(this, GeneratedPasswordConfirmation.class);
         intent.putExtra(ApplicationConstants.APP_NAME, appName);
         intent.putExtra(ApplicationConstants.SONG_NAME, songName);
         intent.putExtra(ApplicationConstants.PASSWORD, password);

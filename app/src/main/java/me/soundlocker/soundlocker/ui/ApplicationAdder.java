@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,7 +12,11 @@ import android.widget.EditText;
 
 import java.util.ArrayList;
 
-public class ApplicationAdderScreen extends Activity {
+import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.StorageWrapper;
+import me.soundlocker.soundlocker.models.Application;
+
+public class ApplicationAdder extends Activity {
     private static final int DEFAULT_PASSWORD_LENGTH = 6;
 
     @Override
@@ -31,9 +35,9 @@ public class ApplicationAdderScreen extends Activity {
         return new View.OnClickListener() {
             public void onClick(View v) {
                 String appName = getAppName();
-                boolean successful = StorageWrapper.addApplication(ApplicationAdderScreen.this.getApplicationContext(), new Application(appName, DEFAULT_PASSWORD_LENGTH));
+                boolean successful = StorageWrapper.addApplication(ApplicationAdder.this.getApplicationContext(), new Application(appName, DEFAULT_PASSWORD_LENGTH));
                 if (successful) {
-                    Intent intent = new Intent(ApplicationAdderScreen.this, ApplicationsListScreen.class);
+                    Intent intent = new Intent(ApplicationAdder.this, ApplicationsList.class);
                     startActivity(intent);
                 } else {
                     showErrorDialog();
@@ -41,13 +45,13 @@ public class ApplicationAdderScreen extends Activity {
             }
 
             private void showErrorDialog() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationAdderScreen.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationAdder.this);
                 builder.setTitle("Failed to Add App");
                 builder.setIcon(android.R.drawable.ic_dialog_alert);
                 builder.setMessage("You already have this app added\n");
                 builder.setPositiveButton("Ok", null);
                 final AlertDialog alert = builder.create();
-                ApplicationAdderScreen.this.runOnUiThread(new Runnable() {
+                ApplicationAdder.this.runOnUiThread(new Runnable() {
                     public void run() {
                         alert.show();
                     }

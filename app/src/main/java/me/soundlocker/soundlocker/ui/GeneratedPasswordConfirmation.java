@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.ui;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -10,10 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class PasswordConfirmationScreen extends Activity {
+import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.ApplicationConstants;
+
+public class GeneratedPasswordConfirmation extends Activity {
 
     private static final String CLIPBOARD_LABEL = "label";
-    private final String INSERT_PASSWORD_TO_WEBVIEW = "Insert Password Into Website";
+    private final String INSERT_PASSWORD_TO_WEBVIEW = "Insert Password Into PreregisteredWebsite";
     private final String COPY_TO_CLIPBOARD = "Copy Password To Clipboard";
 
     private String appName;
@@ -102,7 +105,7 @@ public class PasswordConfirmationScreen extends Activity {
     }
 
     private void goToApplicationsListScreen() {
-        Intent intent = new Intent(this, ApplicationsListScreen.class);
+        Intent intent = new Intent(this, ApplicationsList.class);
         startActivity(intent);
     }
 

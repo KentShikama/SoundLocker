@@ -1,6 +1,5 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.tasks;
 
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -16,34 +15,36 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class SongImageDownloaderTest {
+public class SongByteDataDownloaderTest {
 
-    private static final String NATIVE_IMAGE_URL_STRING =
-            "https://i.scdn.co/image/45b8542038b3b21e392ffead938153448c68ab1d";
-    private static final int ALPHA = 255;
+    private static final String NATIVE_PREVIEW_URL_STRING =
+            "https://p.scdn.co/mp3-preview/c58cd3ffb9e61ad38cde7658f436b4245cfd2666";
+    private static final Byte[] NATIVE_BYTE_DATA_TRUNCATED = {73,68,51};
 
     @Test
     public void songByteDataIsConsistent() {
-        SongImageDownloader task = new SongImageDownloader(null);
+        SongByteDataDownloader task = new SongByteDataDownloader(null);
         URL url = buildURL();
         task.execute(url);
-        Drawable image = getDrawable(task);
-        assertEquals(image.getAlpha(), ALPHA);
+        Byte[] data = getSongByteData(task);
+        assertEquals(data[0], NATIVE_BYTE_DATA_TRUNCATED[0]);
+        assertEquals(data[1], NATIVE_BYTE_DATA_TRUNCATED[1]);
+        assertEquals(data[2], NATIVE_BYTE_DATA_TRUNCATED[2]);
     }
 
     @Nullable
     private URL buildURL() {
         URL url = null;
         try {
-            url = new URL(NATIVE_IMAGE_URL_STRING);
+            url = new URL(NATIVE_PREVIEW_URL_STRING);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return url;
     }
 
-    private Drawable getDrawable(SongImageDownloader task) {
-        Drawable data = null;
+    private Byte[] getSongByteData(SongByteDataDownloader task) {
+        Byte[] data = null;
         try {
             data = task.get();
         } catch (InterruptedException e) {

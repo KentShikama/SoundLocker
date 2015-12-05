@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.ui;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -22,8 +22,13 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-public class SongPickerScreen extends ListActivity {
-    private static final String TAG = "SongPickerScreen";
+import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.tasks.SongImageDownloader;
+import me.soundlocker.soundlocker.tasks.SongSearcher;
+
+public class SongPicker extends ListActivity {
+    private static final String TAG = "SongPicker";
     private static final String SONG_NAME = "song_name";
     private static final String PREVIEW_URL = "preview_url";
     private static final String DEFAULT_SONG = "Native"; // the song album Native by One Republic
@@ -131,7 +136,7 @@ public class SongPickerScreen extends ListActivity {
     }
 
     private void goToPasswordScreen(String songName, String previewUrl) {
-        Intent intent = new Intent(this, PasswordScreen.class);
+        Intent intent = new Intent(this, PasswordGenerationSettings.class);
         intent.putExtra(ApplicationConstants.APP_NAME, appName);
         intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
         intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
@@ -185,7 +190,7 @@ public class SongPickerScreen extends ListActivity {
 
         private void searchForSongWithCurrentValue(String currentValue) {
             String songName = buildURLSafeSongName(currentValue);
-            SongSearcher task = new SongSearcher(SongPickerScreen.this);
+            SongSearcher task = new SongSearcher(SongPicker.this);
             task.execute(songName);
             ArrayList<ImmutableTriple<String, URL, URL>> results = getSongUrls(task);
             updateSongList(results);

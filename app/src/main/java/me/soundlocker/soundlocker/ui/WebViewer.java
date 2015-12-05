@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.StorageWrapper;
+import me.soundlocker.soundlocker.models.PreregisteredWebsite;
 
 public class WebViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +31,13 @@ public class WebViewer extends Activity {
 
     private void insertPasswordIntoWebsiteAux(String websiteString, final String password) {
         WebView webview = buildWebView();
-        final Website website = StorageWrapper.getWebsite(this.getApplicationContext(), websiteString);
-        loadWebsiteIntoView(webview, website);
-        insertPassword(password, webview, website);
+        final PreregisteredWebsite preregisteredWebsite = StorageWrapper.getWebsite(this.getApplicationContext(), websiteString);
+        loadWebsiteIntoView(webview, preregisteredWebsite);
+        insertPassword(password, webview, preregisteredWebsite);
     }
 
-    private void loadWebsiteIntoView(WebView webview, Website website) {
-        webview.loadUrl(website.getLoginUrl());
+    private void loadWebsiteIntoView(WebView webview, PreregisteredWebsite preregisteredWebsite) {
+        webview.loadUrl(preregisteredWebsite.getLoginUrl());
         setContentView(webview);
     }
 
@@ -45,11 +49,11 @@ public class WebViewer extends Activity {
         return webview;
     }
 
-    private void insertPassword(final String password, WebView webview, final Website website) {
+    private void insertPassword(final String password, WebView webview, final PreregisteredWebsite preregisteredWebsite) {
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                view.evaluateJavascript(website.getPasswordFieldElement() + ".value = '" + password + "';", null);
+                view.evaluateJavascript(preregisteredWebsite.getPasswordFieldElement() + ".value = '" + password + "';", null);
             }
         });
     }

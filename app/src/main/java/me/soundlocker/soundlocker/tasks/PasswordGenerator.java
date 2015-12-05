@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.tasks;
 
 import android.util.Log;
 
@@ -12,25 +12,27 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.ExecutionException;
 
+import me.soundlocker.soundlocker.ui.PasswordGenerationSettings;
+
 public class PasswordGenerator {
     private static final String TAG = "PasswordGenerator";
     private static final String BLANK_LINES = "--------------";
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
-    private final PasswordScreen passwordScreen;
+    private final PasswordGenerationSettings passwordGenerationSettings;
     private final String previewStringURL;
     private final String SHA_256 = "SHA-256";
     private String appName;
     private String masterId;
 
-    PasswordGenerator(PasswordScreen passwordScreen, String previewStringURL, String appName, String masterId) {
-        this.passwordScreen = passwordScreen;
+    public PasswordGenerator(PasswordGenerationSettings passwordGenerationSettings, String previewStringURL, String appName, String masterId) {
+        this.passwordGenerationSettings = passwordGenerationSettings;
         this.previewStringURL = previewStringURL;
         this.appName = appName;
         this.masterId = masterId;
     }
 
-    String generatePassword() {
+    public String generatePassword() {
         URL url = buildURL();
         if (url == null) {
             return BLANK_LINES;
@@ -53,7 +55,7 @@ public class PasswordGenerator {
     }
 
     private String generatePasswordForNotNullURL(URL url) {
-        SongByteDataDownloader task = new SongByteDataDownloader(passwordScreen);
+        SongByteDataDownloader task = new SongByteDataDownloader(passwordGenerationSettings);
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
         if (songByteData == null) {

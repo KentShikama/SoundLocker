@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.ui;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.ArrayList;
+
+import me.soundlocker.soundlocker.R;
 
 public class SongItemAdapter extends ArrayAdapter<ImmutablePair<String, Drawable>> {
 

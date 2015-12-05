@@ -1,18 +1,18 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.models;
 
-public class Website {
-    private String shortname;
+public class PreregisteredWebsite {
+    private String shortName;
     private String loginUrl;
     private String passwordFieldElement;
 
-    Website(String shortname, String loginUrl, String passwordFieldElement) {
-        this.shortname = shortname;
+    public PreregisteredWebsite(String shortName, String loginUrl, String passwordFieldElement) {
+        this.shortName = shortName;
         this.loginUrl = loginUrl;
         this.passwordFieldElement = passwordFieldElement;
     }
 
-    public String getShortname() {
-        return shortname;
+    public String getShortName() {
+        return shortName;
     }
 
     public String getLoginUrl() {

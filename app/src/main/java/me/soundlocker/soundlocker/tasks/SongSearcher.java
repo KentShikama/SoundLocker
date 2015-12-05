@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.tasks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
  * The task returns an ArrayList of pairs of
  * 30 second preview URLs of the song and the album's image URL.
  */
-class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<String, URL, URL>>> {
+public class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<String, URL, URL>>> {
 
     private static final int SEARCH_RESULT_LIMIT = 7;
     private static final String TAG = "SongSearcher";

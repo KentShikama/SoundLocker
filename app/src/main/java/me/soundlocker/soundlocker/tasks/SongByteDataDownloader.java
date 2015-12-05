@@ -1,12 +1,14 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.tasks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -14,26 +16,27 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Task for downloading an album image
+ * Task for downloading a song URL.
+ *
+ * The task returns an array of Bytes representing the song.
  */
-class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
-
-    private static final String TAG = "SongImageDownloader";
+class SongByteDataDownloader extends AsyncTask<URL, Integer, Byte[]> {
+    private static final String TAG = "SongByteDataDownloader";
     private final Activity activity;
 
-    public SongImageDownloader(Activity activity) {
+    public SongByteDataDownloader(Activity activity) {
         this.activity = activity;
     }
 
     @Override
-    protected Drawable doInBackground(URL... params) {
+    protected Byte[] doInBackground(URL... params) {
         URL url = params[0];
         HttpsURLConnection urlConnection = null;
         try {
             urlConnection = (HttpsURLConnection) url.openConnection();
             InputStream fileInputStream = new BufferedInputStream(urlConnection.getInputStream());
-            Drawable image = Drawable.createFromStream(fileInputStream, "");
-            return image;
+            byte[] result = inputStreamToByteArray(fileInputStream);
+            return ArrayUtils.toObject(result);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         } finally {
@@ -56,5 +59,15 @@ class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
                 }
             });
         }
+    }
+
+    private byte[] inputStreamToByteArray(InputStream inStream) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = inStream.read(buffer)) > 0) {
+            baos.write(buffer, 0, bytesRead);
+        }
+        return baos.toByteArray();
     }
 }
