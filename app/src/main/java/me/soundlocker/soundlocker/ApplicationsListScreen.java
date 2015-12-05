@@ -11,7 +11,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
-public class ApplicationsList extends ListActivity {
+public class ApplicationsListScreen extends ListActivity {
     private ArrayList<Application> applicationsList;
     private ArrayList<String> applicationsNameList;
     private ArrayAdapter<String> adapter;
@@ -58,7 +58,7 @@ public class ApplicationsList extends ListActivity {
     }
 
     public void addItems(View v) {
-        Intent intent = new Intent(this, ApplicationAdder.class);
+        Intent intent = new Intent(this, ApplicationAdderScreen.class);
         startActivity(intent);
     }
 

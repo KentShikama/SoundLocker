@@ -11,17 +11,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class PasswordScreenTest {
+public class ApplicationsListScreenTest {
 
     @Rule
-    public ActivityTestRule<PasswordScreen> rule = new ActivityTestRule(PasswordScreen.class);
+    public ActivityTestRule<ApplicationsListScreen> rule = new ActivityTestRule(ApplicationsListScreen.class);
     private Boolean run;
 
     @Before
@@ -32,17 +31,11 @@ public class PasswordScreenTest {
     @Test
     public void passwordScreenTests() {
         if (run) {
-            checkSelectedAppNameDisplayed();
-            checkChooseSongOpensSongPickerScreen();
+            selectedAddBtnDisplayed();
         }
     }
 
-    public void checkSelectedAppNameDisplayed() {
-        onView(withId(R.id.textView)).check(matches(isDisplayed()));
-    }
-
-    public void checkChooseSongOpensSongPickerScreen() {
-        onView(withId(R.id.chooseSong)).perform(click());
-        onView(withId(R.id.song_query)).check(matches(isDisplayed()));
+    public void selectedAddBtnDisplayed() {
+        onView(withId(R.id.addBtn)).check(matches(isDisplayed()));
     }
 }

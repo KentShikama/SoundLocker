@@ -102,7 +102,7 @@ public class PasswordConfirmationScreen extends Activity {
     }
 
     private void goToApplicationsListScreen() {
-        Intent intent = new Intent(this, ApplicationsList.class);
+        Intent intent = new Intent(this, ApplicationsListScreen.class);
         startActivity(intent);
     }
 

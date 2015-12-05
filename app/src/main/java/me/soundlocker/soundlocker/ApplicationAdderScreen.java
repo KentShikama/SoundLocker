@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class ApplicationAdder extends Activity {
+public class ApplicationAdderScreen extends Activity {
     private static final int DEFAULT_PASSWORD_LENGTH = 6;
 
     @Override
@@ -23,9 +23,9 @@ public class ApplicationAdder extends Activity {
         return new View.OnClickListener() {
             public void onClick(View v) {
                 String appName = getAppName();
-                boolean successful = StorageWrapper.addApplication(ApplicationAdder.this.getApplicationContext(), new Application(appName, DEFAULT_PASSWORD_LENGTH));
+                boolean successful = StorageWrapper.addApplication(ApplicationAdderScreen.this.getApplicationContext(), new Application(appName, DEFAULT_PASSWORD_LENGTH));
                 if (successful) {
-                    Intent intent = new Intent(ApplicationAdder.this, ApplicationsList.class);
+                    Intent intent = new Intent(ApplicationAdderScreen.this, ApplicationsListScreen.class);
                     startActivity(intent);
                 } else {
                     showErrorDialog();
@@ -33,13 +33,13 @@ public class ApplicationAdder extends Activity {
             }
 
             private void showErrorDialog() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationAdder.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationAdderScreen.this);
                 builder.setTitle("Failed to Add App");
                 builder.setIcon(android.R.drawable.ic_dialog_alert);
                 builder.setMessage("You already have this app added\n");
                 builder.setPositiveButton("Ok", null);
                 final AlertDialog alert = builder.create();
-                ApplicationAdder.this.runOnUiThread(new Runnable() {
+                ApplicationAdderScreen.this.runOnUiThread(new Runnable() {
                     public void run() {
                         alert.show();
                     }
