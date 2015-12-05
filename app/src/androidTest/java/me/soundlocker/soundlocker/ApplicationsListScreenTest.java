@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -37,5 +38,10 @@ public class ApplicationsListScreenTest {
 
     public void selectedAddBtnDisplayed() {
         onView(withId(R.id.addBtn)).check(matches(isDisplayed()));
+    }
+
+    public void clickingAddBtnBringsUserToApplicationAdderScreen() {
+        onView(withId(R.id.addBtn)).perform(click());
+        onView(withId(R.id.addApp)).check(matches(isDisplayed()));
     }
 }

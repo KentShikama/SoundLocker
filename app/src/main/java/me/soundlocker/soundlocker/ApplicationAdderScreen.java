@@ -5,8 +5,12 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.util.ArrayList;
 
 public class ApplicationAdderScreen extends Activity {
     private static final int DEFAULT_PASSWORD_LENGTH = 6;
@@ -17,6 +21,10 @@ public class ApplicationAdderScreen extends Activity {
         setContentView(R.layout.activity_application_adder);
         final Button addAppButton = (Button) findViewById(R.id.addApp);
         addAppButton.setOnClickListener(addAppListener());
+        ArrayList<String> websiteNames = StorageWrapper.getWebsiteNames(this.getApplicationContext());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, websiteNames);
+        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.applicationName);
+        textView.setAdapter(adapter);
     }
 
     private View.OnClickListener addAppListener() {

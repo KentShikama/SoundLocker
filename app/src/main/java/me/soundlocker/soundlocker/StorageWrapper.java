@@ -158,6 +158,16 @@ public class StorageWrapper {
         return websites;
     }
 
+    public static ArrayList<String> getWebsiteNames(Context context) {
+        String jsonString = JSONReader.loadJSONFromAsset(context);
+        ArrayList<Website> websites = buildWebsites(jsonString);
+        ArrayList<String> websiteNames = new ArrayList<>();
+        for (Website website : websites) {
+            websiteNames.add(website.getShortname());
+        }
+        return websiteNames;
+    }
+
     private static ArrayList<Website> buildWebsites(String jsonString) {
         ArrayList<Website> websites = new ArrayList<>();
         try {
