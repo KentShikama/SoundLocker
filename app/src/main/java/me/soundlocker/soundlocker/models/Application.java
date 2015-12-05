@@ -1,4 +1,4 @@
-package me.soundlocker.soundlocker;
+package me.soundlocker.soundlocker.models;
 
 public class Application {
     private String applicationName;

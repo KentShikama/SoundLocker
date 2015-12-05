@@ -10,24 +10,24 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".PasswordScreen"
+            android:name=".ui.PasswordGenerationSettings"
             android:label="@string/app_name"
-            android:parentActivityName=".ApplicationsListScreen"></activity>
+            android:parentActivityName=".ui.ApplicationsList"></activity>
         <activity
-            android:name=".PasswordConfirmationScreen"
+            android:name=".ui.GeneratedPasswordConfirmation"
             android:label="@string/app_name"
-            android:parentActivityName=".PasswordScreen"></activity>
+            android:parentActivityName=".ui.PasswordGenerationSettings"></activity>
         <activity
-            android:name=".WebViewer"
+            android:name=".ui.WebViewer"
             android:label="@string/app_name"
-            android:parentActivityName=".ApplicationsListScreen"></activity>
+            android:parentActivityName=".ui.ApplicationsList"></activity>
         <activity
-            android:name=".SongPickerScreen"
+            android:name=".ui.SongPicker"
             class=".SongPickerScreen"
             android:label="@string/title_activity_list_view"
-            android:parentActivityName=".PasswordScreen"></activity>
+            android:parentActivityName=".ui.PasswordGenerationSettings"></activity>
         <activity
-            android:name=".ApplicationsListScreen"
+            android:name=".ui.ApplicationsList"
             class=".ApplicationsList"
             android:label="@string/title_activity_list_view">
             <intent-filter>
@@ -36,8 +36,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ApplicationAdderScreen"
+            android:name=".ui.ApplicationAdder"
             android:label="@string/title_application_adder"
-            android:parentActivityName=".ApplicationsListScreen"></activity>
+            android:parentActivityName=".ui.ApplicationsList"></activity>
     </application>
 </manifest>
