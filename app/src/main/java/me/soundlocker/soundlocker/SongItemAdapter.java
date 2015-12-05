@@ -25,8 +25,8 @@ public class SongItemAdapter extends ArrayAdapter<ImmutablePair<String, Drawable
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.song_item, null, true);
-        TextView songNameField = (TextView) rowView.findViewById(R.id.song_name);
-        ImageView albumImageView = (ImageView) rowView.findViewById(R.id.song_img);
+        TextView songNameField = (TextView) rowView.findViewById(R.id.songName);
+        ImageView albumImageView = (ImageView) rowView.findViewById(R.id.songImage);
         ImmutablePair<String, Drawable> song = getItem(position);
         songNameField.setText(song.getLeft());
         albumImageView.setImageDrawable(song.getRight());

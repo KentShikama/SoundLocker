@@ -42,11 +42,11 @@ public class SongPickerScreenTest {
     }
 
     public void songQueryFieldExists() {
-        onView(withId(R.id.song_query)).check(matches(isDisplayed()));
+        onView(withId(R.id.songQuery)).check(matches(isDisplayed()));
     }
 
     public void songsFromAlbumAreDisplayed() {
-        onView(withId(R.id.song_query)).perform(typeText(ALBUM_NAME));
+        onView(withId(R.id.songQuery)).perform(typeText(ALBUM_NAME));
         onView(withText(FAMOUS_SONG_FROM_ALBUM_1)).check(matches(isDisplayed()));
         onView(withText(FAMOUS_SONG_FROM_ALBUM_2)).check(matches(isDisplayed()));
     }

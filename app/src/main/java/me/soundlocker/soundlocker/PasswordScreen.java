@@ -47,7 +47,7 @@ public class PasswordScreen extends Activity {
 
     private void setTitle(Intent intent) {
         appName = intent.getStringExtra(ApplicationConstants.APP_NAME);
-        TextView title = (TextView) findViewById(R.id.textView);
+        TextView title = (TextView) findViewById(R.id.applicationName);
         title.setText(appName);
     }
 

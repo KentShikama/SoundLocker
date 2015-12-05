@@ -38,11 +38,11 @@ public class PasswordScreenTest {
     }
 
     public void checkSelectedAppNameDisplayed() {
-        onView(withId(R.id.textView)).check(matches(isDisplayed()));
+        onView(withId(R.id.applicationName)).check(matches(isDisplayed()));
     }
 
     public void checkChooseSongOpensSongPickerScreen() {
         onView(withId(R.id.chooseSong)).perform(click());
-        onView(withId(R.id.song_query)).check(matches(isDisplayed()));
+        onView(withId(R.id.songQuery)).check(matches(isDisplayed()));
     }
 }

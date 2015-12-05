@@ -59,7 +59,7 @@ public class SongPickerScreen extends ListActivity {
     }
 
     private void setUpSongQueryEditor() {
-        EditText songQueryEditor = (EditText) findViewById(R.id.song_query);
+        EditText songQueryEditor = (EditText) findViewById(R.id.songQuery);
         songQueryEditor.addTextChangedListener(new SongQueryWatcher());
     }
 
