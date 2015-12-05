@@ -30,4 +30,4 @@ test:
     - adb shell input touchscreen swipe 370 735 371 735
     - sleep 5
     # run tests against the emulator.
-    - ./gradlew connectedAndroidTest
+    - ./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.UI=false

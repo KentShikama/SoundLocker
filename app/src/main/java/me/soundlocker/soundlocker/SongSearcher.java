@@ -30,6 +30,12 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
     private static final int SEARCH_RESULT_LIMIT = 7;
     private static final String TAG = "SongSearcher";
     private static final String SPOTIFY_API_SEARCH_ENDPOINT = "https://api.spotify.com/v1/search";
+    private final String ITEMS = "items";
+    private final String TRACKS = "tracks";
+    private final String TRACK_OBJECTS_NOT_FOUND = "Cannot find tracks object";
+    private final String CHECK_WIFI = "Please check your Wifi settings\n";
+    private final String NO_INTERNET = "No Internet Connection";
+    private final String OK = "Ok";
 
     private final Activity activity;
 
@@ -47,10 +53,10 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
     protected void onPostExecute(ArrayList<ImmutableTriple<String, URL, URL>> result) {
         if (result == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle("No Internet Connection");
+            builder.setTitle(NO_INTERNET);
             builder.setIcon(android.R.drawable.ic_dialog_alert);
-            builder.setMessage("Please check your Wifi settings\n");
-            builder.setPositiveButton("Ok", null);
+            builder.setMessage(CHECK_WIFI);
+            builder.setPositiveButton(OK, null);
             final AlertDialog alert = builder.create();
             activity.runOnUiThread(new java.lang.Runnable() {
                 public void run() {
@@ -80,10 +86,10 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
     private void readSearchJSON(ArrayList<ImmutableTriple<String, URL, URL>> previewUrls, JsonReader reader) throws IOException {
         reader.beginObject();
         String name = reader.nextName();
-        if (name.equals("tracks")) {
+        if (name.equals(TRACKS)) {
             readTracks(previewUrls, reader);
         } else {
-            throw new IOException("Cannot find tracks object");
+            throw new IOException(TRACK_OBJECTS_NOT_FOUND);
         }
         reader.endObject();
     }
@@ -92,7 +98,7 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
         reader.beginObject();
         while (reader.hasNext()) {
             String itemName = reader.nextName();
-            if (itemName.equals("items")) {
+            if (itemName.equals(ITEMS)) {
                 readItems(previewUrls, reader);
             } else {
                 reader.skipValue();
@@ -136,6 +142,14 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
      * and allows access to the item's preview URL and album image URL
      */
     class ItemContentReader {
+        private final String HEIGHT = "height";
+        private final String URL = "url";
+        private final String IMAGES = "images";
+        private final String ALBUM = "album";
+        private final String NAME = "name";
+        private final String PREVIEW_URL = "preview_url";
+        private final int MAX_IMAGE_HEIGHT = 100;
+
         private JsonReader reader;
         private String songName;
         private URL previewUrl;
@@ -162,20 +176,20 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
             reader.beginObject();
             while (reader.hasNext()) {
                 String symbol = reader.nextName();
-                if (symbol.equals("preview_url")) {
+                if (symbol.equals(PREVIEW_URL)) {
                     if (reader.peek() == JsonToken.STRING) {
                         String previewUrlString = reader.nextString();
                         previewUrl = new URL(previewUrlString);
                     } else {
                         reader.skipValue();
                     }
-                } else if (symbol.equals("name")) {
+                } else if (symbol.equals(NAME)) {
                     if (reader.peek() == JsonToken.STRING) {
                         songName = reader.nextString();
                     } else {
                         reader.skipValue();
                     }
-                } else if (symbol.equals("album")) {
+                } else if (symbol.equals(ALBUM)) {
                     readAlbum();
                 } else {
                     reader.skipValue();
@@ -188,7 +202,7 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
             reader.beginObject();
             while (reader.hasNext()) {
                 String name = reader.nextName();
-                if (name.equals("images")) {
+                if (name.equals(IMAGES)) {
                     readImages();
                 } else {
                     reader.skipValue();
@@ -210,14 +224,14 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
             int height = 0;
             while (reader.hasNext()) {
                 String imageSymbol = reader.nextName();
-                if (imageSymbol.equals("url")) {
+                if (imageSymbol.equals(URL)) {
                     if (reader.peek() == JsonToken.STRING) {
                         String imageUrlString = reader.nextString();
                         assignImageURLIfSmall(imageUrlString, height);
                     } else {
                         reader.skipValue();
                     }
-                } else if (imageSymbol.equals("height")) {
+                } else if (imageSymbol.equals(HEIGHT)) {
                     if (reader.peek() == JsonToken.NUMBER) {
                         height = reader.nextInt();
                     } else {
@@ -231,7 +245,7 @@ class SongSearcher extends AsyncTask<String, Integer, ArrayList<ImmutableTriple<
         }
 
         private void assignImageURLIfSmall(String imageUrlString, int height) throws MalformedURLException {
-            if (height != 0 && height <= 100) {
+            if (height != 0 && height <= MAX_IMAGE_HEIGHT) {
                 imageUrl = new URL(imageUrlString);
             }
         }

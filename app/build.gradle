@@ -19,10 +19,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'commons-codec:commons-codec:1.9'
     compile 'org.apache.commons:commons-lang3:3.2'
     compile 'com.google.code.gson:gson:2.4'
     // Testing dependencies

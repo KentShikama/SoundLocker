@@ -11,15 +11,10 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
-public class ApplicationsList extends ListActivity {
-    private static final String APP_NAME = "app_name";
-    private static final String PASSWORD_LENGTH = "password_length";
-    private static final String MASTER_ID = "master_id";
-
+public class ApplicationsListScreen extends ListActivity {
     private ArrayList<Application> applicationsList;
     private ArrayList<String> applicationsNameList;
     private ArrayAdapter<String> adapter;
-    private Persistence storage = new Persistence();
     private boolean firstBoot;
     private String masterId;
     private SecureRandom random = new SecureRandom();
@@ -28,23 +23,26 @@ public class ApplicationsList extends ListActivity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_applications_list);
+        handleMasterId();
         applicationsList = buildApplicationsList();
         applicationsNameList = buildApplicationsNameList(applicationsList);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
         setListAdapter(adapter);
+    }
 
-        firstBoot = storage.getFirstBoot(this.getApplicationContext());
-        if (firstBoot == false){
+    private void handleMasterId() {
+        firstBoot = StorageWrapper.getFirstBoot(this.getApplicationContext());
+        if (firstBoot == true) {
             masterId = new BigInteger(256, random).toString(32);
-            storage.saveMasterId(ApplicationsList.this.getApplicationContext(),masterId);
-            storage.saveFirstBoot(ApplicationsList.this.getApplicationContext(), true);
+            StorageWrapper.saveMasterId(this.getApplicationContext(), masterId);
+            StorageWrapper.saveFirstBoot(this.getApplicationContext(), false);
         } else {
-            masterId = storage.getMasterId(ApplicationsList.this.getApplicationContext());
+            masterId = StorageWrapper.getMasterId(this.getApplicationContext());
         }
     }
 
     private ArrayList<Application> buildApplicationsList() {
-        ArrayList<Application> applicationsList = storage.getApplications(this.getApplicationContext());
+        ArrayList<Application> applicationsList = StorageWrapper.getApplications(this.getApplicationContext());
         if (applicationsList == null) {
             applicationsList = new ArrayList<>();
         }
@@ -54,22 +52,28 @@ public class ApplicationsList extends ListActivity {
     private ArrayList<String> buildApplicationsNameList(ArrayList<Application> applicationsList) {
         ArrayList<String> applicationNameList = new ArrayList<>();
         for (Application application : applicationsList) {
-            applicationNameList.add(application.applicationName);
+            applicationNameList.add(application.getApplicationName());
         }
         return applicationNameList;
     }
 
     public void addItems(View v) {
-        Intent intent = new Intent(this, ApplicationAdder.class);
+        Intent intent = new Intent(this, ApplicationAdderScreen.class);
         startActivity(intent);
     }
 
     protected void onListItemClick(ListView list, View view, int position, long id) {
-        Intent intent = new Intent(this, PasswordScreen.class);
         Application selectedApplication = applicationsList.get(position);
-        intent.putExtra(APP_NAME, selectedApplication.applicationName);
-        intent.putExtra(PASSWORD_LENGTH, selectedApplication.passwordLength);
-        intent.putExtra(MASTER_ID, masterId);
+        String applicationName = selectedApplication.getApplicationName();
+        goToPasswordScreen(applicationName);
+    }
+
+    private void goToPasswordScreen(String applicationName) {
+        Intent intent = new Intent(this, PasswordScreen.class);
+        boolean isPreregistered = StorageWrapper.isPreregistered(this.getApplicationContext(), applicationName);
+        intent.putExtra(ApplicationConstants.APP_NAME, applicationName);
+        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
+        intent.putExtra(ApplicationConstants.PREREGISTERED, isPreregistered);
         startActivity(intent);
     }
 }

@@ -7,3 +7,5 @@
 /captures
 /.idea/
 app/app.iml
+keystore.jks
+app/app-debug.apk
