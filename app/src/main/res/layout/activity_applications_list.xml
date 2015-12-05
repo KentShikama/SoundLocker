@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-    <Button
-        android:id="@+id/addBtn"
-        android:text="+"
-        android:layout_marginStart="300dp"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:onClick="addItems"/>
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:drawSelectorOnTop="false"
-        />
+        android:layout_marginTop="10dp" />
+
+    <com.software.shell.fab.ActionButton
+        android:id="@+id/addBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="addItems"
+        android:layout_weight="0"
+        android:elevation="5dp"
+        android:layout_gravity="center_horizontal|bottom" />
 </LinearLayout>

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.software.shell.fab.ActionButton;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class ApplicationsListScreen extends ListActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_applications_list);
         handleMasterId();
+        styleActionButton();
         applicationsList = buildApplicationsList();
         applicationsNameList = buildApplicationsNameList(applicationsList);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
@@ -39,6 +42,13 @@ public class ApplicationsListScreen extends ListActivity {
         } else {
             masterId = StorageWrapper.getMasterId(this.getApplicationContext());
         }
+    }
+
+    private void styleActionButton() {
+        ActionButton actionButton = (ActionButton) findViewById(R.id.addBtn);
+        actionButton.setType(ActionButton.Type.DEFAULT);
+        actionButton.setButtonColor(getResources().getColor(R.color.fab_material_red_500));
+        actionButton.setImageResource(R.drawable.fab_plus_icon);
     }
 
     private ArrayList<Application> buildApplicationsList() {
