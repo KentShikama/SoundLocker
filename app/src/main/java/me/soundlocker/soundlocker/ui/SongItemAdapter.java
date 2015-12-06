@@ -15,11 +15,11 @@ import java.util.ArrayList;
 
 import me.soundlocker.soundlocker.R;
 
-public class SongItemAdapter extends ArrayAdapter<ImmutablePair<String, Drawable>> {
+class SongItemAdapter extends ArrayAdapter<ImmutablePair<String, Drawable>> {
 
     private final Activity context;
 
-    public SongItemAdapter(Activity context, ArrayList<ImmutablePair<String, Drawable>> songs) {
+    SongItemAdapter(Activity context, ArrayList<ImmutablePair<String, Drawable>> songs) {
         super(context, R.layout.activity_song_picker_screen, songs);
         this.context = context;
     }

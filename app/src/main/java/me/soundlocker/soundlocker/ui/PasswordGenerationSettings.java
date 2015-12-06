@@ -87,7 +87,7 @@ public class PasswordGenerationSettings extends Activity {
     }
 
     /**
-     * Called when the user clicks the Choose Song button
+     * showSongPicker is called when the user clicks the Choose Song button
      */
     public void showSongPicker(View view) {
         Intent intent = new Intent(this, SongPicker.class);
@@ -98,7 +98,7 @@ public class PasswordGenerationSettings extends Activity {
     }
 
     /**
-     * Called when the user clicks the Generate Password button
+     * generatePasswordAndContinue is called when the user clicks the Generate Password button
      */
     public void generatePasswordAndContinue(View view) {
         generatePassword();

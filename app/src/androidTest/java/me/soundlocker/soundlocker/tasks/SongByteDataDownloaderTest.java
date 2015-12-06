@@ -3,6 +3,7 @@ package me.soundlocker.soundlocker.tasks;
 import android.support.annotation.Nullable;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ public class SongByteDataDownloaderTest {
     private static final String NATIVE_PREVIEW_URL_STRING =
             "https://p.scdn.co/mp3-preview/c58cd3ffb9e61ad38cde7658f436b4245cfd2666";
     private static final Byte[] NATIVE_BYTE_DATA_TRUNCATED = {73,68,51};
+    private static final String TAG = "SBDDTest";
 
     @Test
     public void songByteDataIsConsistent() {
@@ -48,9 +50,9 @@ public class SongByteDataDownloaderTest {
         try {
             data = task.get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return data;
     }

@@ -17,13 +17,13 @@ import me.soundlocker.soundlocker.ui.PasswordGenerationSettings;
 public class PasswordGenerator {
     private static final String TAG = "PasswordGenerator";
     private static final String BLANK_LINES = "--------------";
+    private static final String SHA_256 = "SHA-256";
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     private final PasswordGenerationSettings passwordGenerationSettings;
     private final String previewStringURL;
-    private final String SHA_256 = "SHA-256";
-    private String appName;
-    private String masterId;
+    private final String appName;
+    private final String masterId;
 
     public PasswordGenerator(PasswordGenerationSettings passwordGenerationSettings, String previewStringURL, String appName, String masterId) {
         this.passwordGenerationSettings = passwordGenerationSettings;

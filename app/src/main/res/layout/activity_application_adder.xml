@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:hint="@string/application_name"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:gravity="center"
         />
 
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:onClick="displayPassword"
+        android:onClick="addApplication"
         android:text="@string/add_application"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp" />

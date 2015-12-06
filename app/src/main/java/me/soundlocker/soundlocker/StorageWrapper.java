@@ -28,7 +28,7 @@ public class StorageWrapper {
     private static final String SHORT_NAME = "shortname";
     private static final String LOGIN_URL = "loginUrl";
     private static final String PASSWORD_FIELD_ELEMENT = "passwordFieldElement";
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     private StorageWrapper() {}
 
@@ -62,26 +62,26 @@ public class StorageWrapper {
         }
     }
 
-    public static void saveApplications(Context context, List<Application> applications) {
+    private static void saveApplications(Context context, List<Application> applications) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
-        String jsonFavorites = gson.toJson(applications);
-        editor.putString(APPLICATION_LIST, jsonFavorites);
-        editor.commit();
+        String applicationsString = gson.toJson(applications);
+        editor.putString(APPLICATION_LIST, applicationsString);
+        editor.apply();
     }
 
-    public static void saveFirstBoot(Context context, boolean firstBoot) {
+    public static void saveBooted(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
-        editor.putBoolean(FIRST_BOOT, firstBoot);
-        editor.commit();
+        editor.putBoolean(FIRST_BOOT, false);
+        editor.apply();
     }
 
     public static void saveMasterId(Context context, String masterId) {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Editor editor = settings.edit();
         editor.putString(MASTER_ID, masterId);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -146,7 +146,12 @@ public class StorageWrapper {
         return false;
     }
 
-    public void removeApplication(Context context, Application application) {
+    /**
+     * Unused
+     * @param context
+     * @param application
+     */
+    public static void removeApplication(Context context, Application application) {
         List<Application> applications = getApplications(context);
         if (applications != null) {
             applications.remove(application);
@@ -154,7 +159,7 @@ public class StorageWrapper {
         }
     }
 
-    public static ArrayList<PreregisteredWebsite> getWebsites(Context context) {
+    private static ArrayList<PreregisteredWebsite> getWebsites(Context context) {
         String jsonString = JSONReader.loadJSONFromAsset(context);
         ArrayList<PreregisteredWebsite> preregisteredWebsites = buildWebsites(jsonString);
         return preregisteredWebsites;
