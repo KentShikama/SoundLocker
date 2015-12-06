@@ -8,6 +8,6 @@
         android:layout_height="wrap_content"
         android:text="@string/editMasterId"
         android:id="@+id/button"
-        android:onClick="modifyMasterId"
+        android:onClick="masterIdPopup"
         android:layout_gravity="center_horizontal" />
 </menu>

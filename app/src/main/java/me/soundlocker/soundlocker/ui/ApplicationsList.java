@@ -2,7 +2,6 @@ package me.soundlocker.soundlocker.ui;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,15 +30,19 @@ import me.soundlocker.soundlocker.models.Application;
  * The starting screen of SoundLocker.
  */
 public class ApplicationsList extends ListActivity {
+    private static final String OK = "OK";
+    private static final String CANCEL = "Cancel";
+    private static final String VIEW_EDIT_MASTER_ID_MESSAGE = "View/Edit Master ID";
+    private static final String MASTER_ID_MEANING_MESSAGE = "The Master ID is a unique identifier for your application. Changing it will change your generated passwords.";
+    private static final int LEFT_RIGHT_TEXTVIEW_PADDING = 50;
+    private static final int TOP_BOTTOM_TEXTVIEW_PADDING = 30;
     private ArrayList<Application> applicationsList;
     private String masterId;
     private final SecureRandom random = new SecureRandom();
-    private Context appContext;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        appContext = this.getApplicationContext();
         setContentView(R.layout.activity_applications_list);
         handleMasterId();
         styleActionButton();
@@ -52,6 +55,14 @@ public class ApplicationsList extends ListActivity {
     public void addItems(View v) {
         Intent intent = new Intent(this, ApplicationAdder.class);
         startActivity(intent);
+    }
+
+    /**
+     * Called when "View/Edit Master ID" menu item is clicked
+     */
+    public void masterIdPopup(MenuItem item) {
+        AlertDialog.Builder builder = buildEditMasterIdPopup();
+        builder.show();
     }
 
     @Override
@@ -71,7 +82,7 @@ public class ApplicationsList extends ListActivity {
     private void handleMasterId() {
         boolean firstBoot = StorageWrapper.getFirstBoot(this.getApplicationContext());
         if (firstBoot) {
-            masterId = new BigInteger(256, random).toString(32);
+            masterId = new BigInteger(64, random).toString(32);
             StorageWrapper.saveMasterId(this.getApplicationContext(), masterId);
             StorageWrapper.saveBooted(this.getApplicationContext());
         } else {
@@ -118,36 +129,44 @@ public class ApplicationsList extends ListActivity {
         startActivity(intent);
     }
 
-    public void modifyMasterId(MenuItem item) {
+    private AlertDialog.Builder buildEditMasterIdPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("View/Edit Master Id");
-        builder.setMessage("Warning: Any modifications to the Master ID will change your generated passwords");
+        builder.setTitle(VIEW_EDIT_MASTER_ID_MESSAGE);
+        builder.setMessage(MASTER_ID_MEANING_MESSAGE);
+        final EditText masterIdField = buildMasterIdEditText();
+        builder.setView(masterIdField);
+        configureOkButton(builder, masterIdField);
+        configureCancelButton(builder);
+        return builder;
+    }
 
-        // Set up the input
+    private EditText buildMasterIdEditText() {
         final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setInputType(InputType.TYPE_CLASS_TEXT); // Set input as a password
         input.setText(masterId);
+        input.setPadding(LEFT_RIGHT_TEXTVIEW_PADDING, TOP_BOTTOM_TEXTVIEW_PADDING,
+                LEFT_RIGHT_TEXTVIEW_PADDING, TOP_BOTTOM_TEXTVIEW_PADDING);
+        return input;
+    }
 
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    private void configureOkButton(AlertDialog.Builder builder, final EditText masterIdField) {
+        builder.setPositiveButton(OK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (input.getText().toString() != "") {
-                    masterId = input.getText().toString();
-                    StorageWrapper.saveMasterId(appContext, masterId);
+                String masterId = masterIdField.getText().toString();
+                if (!masterId.isEmpty()) {
+                    StorageWrapper.saveMasterId(ApplicationsList.this.getApplicationContext(), masterId);
                 }
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+    }
+
+    private void configureCancelButton(AlertDialog.Builder builder) {
+        builder.setNegativeButton(CANCEL, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-
-        builder.show();
     }
 }
