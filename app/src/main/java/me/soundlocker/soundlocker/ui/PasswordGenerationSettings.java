@@ -18,7 +18,7 @@ public class PasswordGenerationSettings extends Activity {
     private static final String PREVIEW_URL = "preview_url";
     private static final int DEFAULT_PASSWORD_LENGTH = 10;
     private static final int MINIMUM_PASSWORD_LENGTH = 3;
-    private static final int MAXIMUM_PASSWORD_LENGTH = 10;
+    private static final int MAXIMUM_PASSWORD_LENGTH = 30;
     private String previewUrl;
     private String appName;
     private String password;
