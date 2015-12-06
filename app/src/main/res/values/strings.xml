@@ -4,6 +4,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="generate">Generate Password</string>
+    <string name="editMasterId">View/Edit Master ID</string>
     <string name="chooseSong">Choose Song</string>
     <string name="webview">Open WebView</string>
     <string name="title_activity_list_view">Applications List</string>

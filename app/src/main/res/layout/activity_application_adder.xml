@@ -6,7 +6,7 @@
     <AutoCompleteTextView
         android:id="@+id/applicationName"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:hint="@string/application_name"
         android:textSize="20sp"
         android:gravity="center"
