@@ -14,10 +14,15 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 
 import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.SoundLockerConstants;
 import me.soundlocker.soundlocker.StorageWrapper;
 import me.soundlocker.soundlocker.models.Application;
-import me.soundlocker.soundlocker.SoundLockerConstants;
 
+/**
+ * Screen showing a list of applications that the user has generated passwords for.
+ * There is a '+' button that the user can click to add a new application to the list.
+ * The starting screen of SoundLocker.
+ */
 public class ApplicationsList extends ListActivity {
     private ArrayList<Application> applicationsList;
     private String masterId;
@@ -29,10 +34,22 @@ public class ApplicationsList extends ListActivity {
         setContentView(R.layout.activity_applications_list);
         handleMasterId();
         styleActionButton();
-        applicationsList = buildApplicationsList();
-        ArrayList<String> applicationsNameList = buildApplicationsNameList(applicationsList);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
-        setListAdapter(adapter);
+        handleApplicationsList();
+    }
+
+    /**
+     * Called whenever the user clicks the '+' action button
+     */
+    public void addItems(View v) {
+        Intent intent = new Intent(this, ApplicationAdder.class);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onListItemClick(ListView list, View view, int position, long id) {
+        Application selectedApplication = applicationsList.get(position);
+        String applicationName = selectedApplication.getApplicationName();
+        goToPasswordScreen(applicationName);
     }
 
     private void handleMasterId() {
@@ -53,6 +70,13 @@ public class ApplicationsList extends ListActivity {
         actionButton.setImageResource(R.drawable.fab_plus_icon);
     }
 
+    private void handleApplicationsList() {
+        applicationsList = buildApplicationsList();
+        ArrayList<String> applicationsNameList = buildApplicationsNameList(applicationsList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
+        setListAdapter(adapter);
+    }
+
     private ArrayList<Application> buildApplicationsList() {
         ArrayList<Application> applicationsList = StorageWrapper.getApplications(this.getApplicationContext());
         if (applicationsList == null) {
@@ -67,20 +91,6 @@ public class ApplicationsList extends ListActivity {
             applicationNameList.add(application.getApplicationName());
         }
         return applicationNameList;
-    }
-
-    /**
-     * addItems is called whenever the user clicks the '+' action button
-     */
-    public void addItems(View v) {
-        Intent intent = new Intent(this, ApplicationAdder.class);
-        startActivity(intent);
-    }
-
-    protected void onListItemClick(ListView list, View view, int position, long id) {
-        Application selectedApplication = applicationsList.get(position);
-        String applicationName = selectedApplication.getApplicationName();
-        goToPasswordScreen(applicationName);
     }
 
     private void goToPasswordScreen(String applicationName) {

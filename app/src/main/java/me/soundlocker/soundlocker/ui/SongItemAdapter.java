@@ -15,6 +15,10 @@ import java.util.ArrayList;
 
 import me.soundlocker.soundlocker.R;
 
+/**
+ * Represents one song in the {@link me.soundlocker.soundlocker.ui.SongPicker}'s list view.
+ * It consists of an album image and the song name.
+ */
 class SongItemAdapter extends ArrayAdapter<ImmutablePair<String, Drawable>> {
 
     private final Activity context;
@@ -24,6 +28,7 @@ class SongItemAdapter extends ArrayAdapter<ImmutablePair<String, Drawable>> {
         this.context = context;
     }
 
+    @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.song_item, null, true);

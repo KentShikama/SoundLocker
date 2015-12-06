@@ -10,9 +10,12 @@ import android.widget.TextView;
 
 import me.soundlocker.soundlocker.R;
 import me.soundlocker.soundlocker.SoundLockerConstants;
-import me.soundlocker.soundlocker.tasks.PasswordGenerator;
 import me.soundlocker.soundlocker.StorageWrapper;
+import me.soundlocker.soundlocker.tasks.PasswordGenerator;
 
+/**
+ * Screen in which the user can choose the password length and song to generate the password with.
+ */
 public class PasswordGenerationSettings extends Activity {
     private static final int DEFAULT_PASSWORD_LENGTH = 10;
     private static final int MINIMUM_PASSWORD_LENGTH = 3;
@@ -37,6 +40,35 @@ public class PasswordGenerationSettings extends Activity {
         super.onResume();
         Intent intent = getIntent();
         setInitialValues(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                setInitialValues(intent);
+            }
+        }
+    }
+
+    /**
+     * Called when the user clicks the Choose Song button
+     */
+    public void showSongPicker(View view) {
+        Intent intent = new Intent(this, SongPicker.class);
+        intent.putExtra(SoundLockerConstants.APP_NAME, appName);
+        intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
+        intent.putExtra(SoundLockerConstants.PREREGISTERED, preregistered);
+        startActivity(intent);
+    }
+
+    /**
+     * Called when the user clicks the Generate Password button
+     */
+    public void generatePasswordAndContinue(View view) {
+        generatePassword();
+        showPasswordConfirmationScreen();
     }
 
     private void setInitialValues(Intent intent) {
@@ -84,25 +116,6 @@ public class PasswordGenerationSettings extends Activity {
         }
     }
 
-    /**
-     * showSongPicker is called when the user clicks the Choose Song button
-     */
-    public void showSongPicker(View view) {
-        Intent intent = new Intent(this, SongPicker.class);
-        intent.putExtra(SoundLockerConstants.APP_NAME, appName);
-        intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
-        intent.putExtra(SoundLockerConstants.PREREGISTERED, preregistered);
-        startActivity(intent);
-    }
-
-    /**
-     * generatePasswordAndContinue is called when the user clicks the Generate Password button
-     */
-    public void generatePasswordAndContinue(View view) {
-        generatePassword();
-        showPasswordConfirmationScreen();
-    }
-
     private void generatePassword() {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl, appName, masterId);
         String longPassword = generator.generatePassword();
@@ -124,15 +137,5 @@ public class PasswordGenerationSettings extends Activity {
         intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
         intent.putExtra(SoundLockerConstants.PREREGISTERED, preregistered);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                setInitialValues(intent);
-            }
-        }
     }
 }

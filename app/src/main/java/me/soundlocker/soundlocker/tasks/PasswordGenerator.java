@@ -14,6 +14,9 @@ import java.util.concurrent.ExecutionException;
 
 import me.soundlocker.soundlocker.ui.PasswordGenerationSettings;
 
+/**
+ * Task for generating a password using the song, the application's name, and the {@link me.soundlocker.soundlocker.SoundLockerConstants#MASTER_ID}.
+ */
 public class PasswordGenerator {
     private static final String TAG = "PasswordGenerator";
     private static final String BLANK_LINES = "--------------";
@@ -116,6 +119,7 @@ public class PasswordGenerator {
         return Hex.decodeHex(string.toCharArray());
     }
 
+    // This method maps each byte value in the byte array to a corresponding character in the {@link #HEX_ARRAY}.
     private String convertBytesToString(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {

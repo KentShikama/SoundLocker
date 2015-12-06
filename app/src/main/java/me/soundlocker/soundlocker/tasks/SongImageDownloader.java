@@ -14,7 +14,7 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Task for downloading an album image
+ * Task for downloading a song's album image
  */
 public class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
 
@@ -34,8 +34,8 @@ public class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
         HttpsURLConnection urlConnection = null;
         try {
             urlConnection = (HttpsURLConnection) url.openConnection();
-            InputStream fileInputStream = new BufferedInputStream(urlConnection.getInputStream());
-            Drawable image = Drawable.createFromStream(fileInputStream, "");
+            InputStream fileInputStreamOfImage = new BufferedInputStream(urlConnection.getInputStream());
+            Drawable image = buildDrawableFromFileStreamOfImage(fileInputStreamOfImage);
             return image;
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
@@ -45,6 +45,10 @@ public class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
             }
         }
         return null;
+    }
+
+    private Drawable buildDrawableFromFileStreamOfImage(InputStream fileInputStream) {
+        return Drawable.createFromStream(fileInputStream, "");
     }
 
     @Override

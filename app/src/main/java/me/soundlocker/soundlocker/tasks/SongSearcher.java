@@ -27,14 +27,15 @@ import me.soundlocker.soundlocker.models.Song;
  */
 public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
 
-    private static final int SEARCH_RESULT_LIMIT = 7;
     private static final String TAG = "SongSearcher";
+
+    private static final int SEARCH_RESULT_LIMIT = 7;
     private static final String SPOTIFY_API_SEARCH_ENDPOINT = "https://api.spotify.com/v1/search";
     private static final String ITEMS = "items";
     private static final String TRACKS = "tracks";
-    private static final String TRACK_OBJECTS_NOT_FOUND = "Cannot find tracks object";
-    private static final String CHECK_WIFI = "Please check your Wifi settings\n";
-    private static final String NO_INTERNET = "No Internet Connection";
+    private static final String TRACK_OBJECTS_NOT_FOUND_MESSAGE = "Cannot find tracks object";
+    private static final String CHECK_WIFI_MESSAGE = "Please check your Wifi settings\n";
+    private static final String NO_INTERNET_MESSAGE = "No Internet Connection";
     private static final String OK = "Ok";
 
     private final Activity activity;
@@ -54,9 +55,9 @@ public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
     protected void onPostExecute(ArrayList<Song> result) {
         if (result == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle(NO_INTERNET);
+            builder.setTitle(NO_INTERNET_MESSAGE);
             builder.setIcon(android.R.drawable.ic_dialog_alert);
-            builder.setMessage(CHECK_WIFI);
+            builder.setMessage(CHECK_WIFI_MESSAGE);
             builder.setPositiveButton(OK, null);
             final AlertDialog alert = builder.create();
             activity.runOnUiThread(new java.lang.Runnable() {
@@ -92,7 +93,7 @@ public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
         if (name.equals(TRACKS)) {
             readTracks(songs, reader);
         } else {
-            throw new IOException(TRACK_OBJECTS_NOT_FOUND);
+            throw new IOException(TRACK_OBJECTS_NOT_FOUND_MESSAGE);
         }
         reader.endObject();
     }
