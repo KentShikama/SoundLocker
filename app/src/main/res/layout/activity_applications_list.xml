@@ -23,4 +23,12 @@
         android:layout_weight="0"
         android:elevation="5dp"
         android:layout_gravity="center_horizontal|bottom" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/editMasterId"
+        android:id="@+id/button"
+        android:onClick="modifyMasterId"
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>

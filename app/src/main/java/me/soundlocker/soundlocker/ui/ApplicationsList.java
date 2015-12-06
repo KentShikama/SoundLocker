@@ -1,10 +1,15 @@
 package me.soundlocker.soundlocker.ui;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.software.shell.fab.ActionButton;
@@ -27,10 +32,12 @@ public class ApplicationsList extends ListActivity {
     private ArrayList<Application> applicationsList;
     private String masterId;
     private final SecureRandom random = new SecureRandom();
+    private Context appContext;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        appContext = this.getApplicationContext();
         setContentView(R.layout.activity_applications_list);
         handleMasterId();
         styleActionButton();
@@ -100,5 +107,35 @@ public class ApplicationsList extends ListActivity {
         intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
         intent.putExtra(SoundLockerConstants.PREREGISTERED, isPreregistered);
         startActivity(intent);
+    }
+
+    public void modifyMasterId(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Master Id");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setText(masterId);
+
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                masterId = input.getText().toString();
+                StorageWrapper.saveMasterId(appContext, masterId);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }
