@@ -13,6 +13,11 @@ import android.widget.TextView;
 import me.soundlocker.soundlocker.R;
 import me.soundlocker.soundlocker.SoundLockerConstants;
 
+/**
+ * Screen in which the user can confirm that they have generated a password.
+ * Here they will be given an option to copy the generated password to the clipboard
+ * or insert the generated password to the preregistered website through a webview.
+ */
 public class GeneratedPasswordConfirmation extends Activity {
 
     private static final String CLIPBOARD_LABEL = "label";
@@ -39,8 +44,7 @@ public class GeneratedPasswordConfirmation extends Activity {
     }
 
     /**
-     * insertPasswordOrCopyToClipboard is called when the user
-     * clicks the Copy to Clipboard or Insert Password Into Application
+     * Called when the user clicks the "Copy to Clipboard" or "Insert Password Into Application" button
      */
     public void insertPasswordOrCopyToClipboard(View view) {
         if (preregistered) {

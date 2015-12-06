@@ -11,6 +11,10 @@ import me.soundlocker.soundlocker.SoundLockerConstants;
 import me.soundlocker.soundlocker.StorageWrapper;
 import me.soundlocker.soundlocker.models.PreregisteredWebsite;
 
+/**
+ * Screen in which the preregistered website is opened up
+ * and the password is inserted to its password field.
+ */
 public class WebViewer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

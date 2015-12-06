@@ -21,12 +21,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import me.soundlocker.soundlocker.SoundLockerConstants;
 import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.SoundLockerConstants;
 import me.soundlocker.soundlocker.models.Song;
 import me.soundlocker.soundlocker.tasks.SongImageDownloader;
 import me.soundlocker.soundlocker.tasks.SongSearcher;
 
+/**
+ * Screen in which the user can type in a song name in the query field.
+ * Results that are queried from the Spotify API are then shown in the list view.
+ */
 public class SongPicker extends ListActivity {
     private static final String TAG = "SongPicker";
     private static final String DEFAULT_SONG = "Native"; // the song album Native by One Republic
@@ -47,6 +51,29 @@ public class SongPicker extends ListActivity {
         saveIntentExtras();
         setUpSongListAdapter();
         setUpSongQueryEditor();
+    }
+
+    @Override
+    protected void onListItemClick(ListView list, View view, int position, long id) {
+        Song song = currentResults.get(position);
+        String songName = song.getSongName();
+        String previewUrl = song.getPreviewUrl().toString();
+        goToPasswordScreen(songName, previewUrl);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                sendOnBackData();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        sendOnBackData();
     }
 
     private void saveIntentExtras() {
@@ -77,7 +104,6 @@ public class SongPicker extends ListActivity {
         }
         return songs;
     }
-
 
     private String buildURLSafeSongName(String songName) {
         try {
@@ -126,13 +152,6 @@ public class SongPicker extends ListActivity {
         songsAdapter.notifyDataSetChanged();
     }
 
-    protected void onListItemClick(ListView list, View view, int position, long id) {
-        Song song = currentResults.get(position);
-        String songName = song.getSongName();
-        String previewUrl = song.getPreviewUrl().toString();
-        goToPasswordScreen(songName, previewUrl);
-    }
-
     private void goToPasswordScreen(String songName, String previewUrl) {
         Intent intent = new Intent(this, PasswordGenerationSettings.class);
         intent.putExtra(SoundLockerConstants.APP_NAME, appName);
@@ -141,21 +160,6 @@ public class SongPicker extends ListActivity {
         intent.putExtra(SoundLockerConstants.SONG_NAME, songName);
         intent.putExtra(SoundLockerConstants.PREVIEW_URL, previewUrl);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                sendOnBackData();
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        sendOnBackData();
     }
 
     private void sendOnBackData() {

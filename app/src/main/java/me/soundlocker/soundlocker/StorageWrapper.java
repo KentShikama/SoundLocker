@@ -152,6 +152,9 @@ public class StorageWrapper {
         return false;
     }
 
+    /**
+     * Gets the names of all the preregistered websites
+     */
     public static ArrayList<String> getWebsiteNames(Context context) {
         String jsonString = JSONReader.loadJSONFromAsset(context);
         ArrayList<PreregisteredWebsite> preregisteredWebsites = buildWebsites(jsonString);
@@ -162,16 +165,10 @@ public class StorageWrapper {
         return websiteNames;
     }
 
-    public static PreregisteredWebsite getWebsite(Context context, String applicationName) {
-        ArrayList<PreregisteredWebsite> preregisteredWebsites = getWebsites(context);
-        for (PreregisteredWebsite preregisteredWebsite : preregisteredWebsites) {
-            if (preregisteredWebsite.getShortName().equals(applicationName)) {
-                return preregisteredWebsite;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Retrieves whether the {@link me.soundlocker.soundlocker.models.PreregisteredWebsite} object
+     * based on the applicationName exists.
+     */
     public static boolean isPreregistered(Context context, String applicationName) {
         ArrayList<PreregisteredWebsite> preregisteredWebsites = getWebsites(context);
         for (PreregisteredWebsite preregisteredWebsite : preregisteredWebsites) {
@@ -180,6 +177,22 @@ public class StorageWrapper {
             }
         }
         return false;
+    }
+
+    /**
+     * Gets the {@link me.soundlocker.soundlocker.models.PreregisteredWebsite} object based on the applicationName:
+     * use the isPreregistered method to check whether such an object exists.
+     *
+     * @return the {@link me.soundlocker.soundlocker.models.PreregisteredWebsite} object or null if none exists
+     */
+    public static PreregisteredWebsite getWebsite(Context context, String applicationName) {
+        ArrayList<PreregisteredWebsite> preregisteredWebsites = getWebsites(context);
+        for (PreregisteredWebsite preregisteredWebsite : preregisteredWebsites) {
+            if (preregisteredWebsite.getShortName().equals(applicationName)) {
+                return preregisteredWebsite;
+            }
+        }
+        return null;
     }
 
     private static void saveApplications(Context context, List<Application> applications) {

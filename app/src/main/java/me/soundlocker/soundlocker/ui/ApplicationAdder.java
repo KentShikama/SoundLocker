@@ -15,6 +15,10 @@ import me.soundlocker.soundlocker.R;
 import me.soundlocker.soundlocker.StorageWrapper;
 import me.soundlocker.soundlocker.models.Application;
 
+/**
+ * Simple screen in which the user can type the name of an application and click "Add Application"
+ * to have the application added to the Applications list.
+ */
 public class ApplicationAdder extends Activity {
     private final String FAILURE_MESSAGE = "Failed to Add App";
     private final String FAILURE_TO_ADD_APP_MESSAGE = "You already have this app added\n";
