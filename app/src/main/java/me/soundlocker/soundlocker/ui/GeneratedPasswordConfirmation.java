@@ -16,8 +16,8 @@ import me.soundlocker.soundlocker.ApplicationConstants;
 public class GeneratedPasswordConfirmation extends Activity {
 
     private static final String CLIPBOARD_LABEL = "label";
-    private final String INSERT_PASSWORD_TO_WEBVIEW = "Insert Password Into Website";
-    private final String COPY_TO_CLIPBOARD = "Copy Password To Clipboard";
+    private static final String INSERT_PASSWORD_TO_WEBVIEW = "Insert Password Into Website";
+    private static final String COPY_TO_CLIPBOARD = "Copy Password To Clipboard";
 
     private String appName;
     private String songName;
@@ -68,8 +68,8 @@ public class GeneratedPasswordConfirmation extends Activity {
     private void setInitialValues() {
         Intent intent = getIntent();
         setTitle(intent);
+        setPasswordField(intent);
         setPreregisteredAndFinalButton(intent);
-        password = intent.getStringExtra(ApplicationConstants.PASSWORD);
         songName = intent.getStringExtra(ApplicationConstants.SONG_NAME);
         masterId = intent.getStringExtra(ApplicationConstants.MASTER_ID);
     }
@@ -78,6 +78,12 @@ public class GeneratedPasswordConfirmation extends Activity {
         appName = intent.getStringExtra(ApplicationConstants.APP_NAME);
         TextView title = (TextView) findViewById(R.id.applicationName);
         title.setText(appName);
+    }
+
+    private void setPasswordField(Intent intent) {
+        password = intent.getStringExtra(ApplicationConstants.PASSWORD);
+        TextView passwordField = (TextView) findViewById(R.id.generatedPassword);
+        passwordField.setText(password);
     }
 
     private void setPreregisteredAndFinalButton(Intent intent) {

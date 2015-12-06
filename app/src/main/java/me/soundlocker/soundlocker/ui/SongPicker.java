@@ -35,7 +35,7 @@ public class SongPicker extends ListActivity {
     private static final String NO_UTF8 = "Device does not support UTF-8";
     private static final String UTF8 = "UTF-8";
 
-    private ArrayList<ImmutablePair<String, Drawable>> songItemList = new ArrayList<>();
+    private final ArrayList<ImmutablePair<String, Drawable>> songItemList = new ArrayList<>();
     private SongItemAdapter songsAdapter;
     private ArrayList<Song> currentResults;
     private String appName;
@@ -73,9 +73,9 @@ public class SongPicker extends ListActivity {
         try {
             songs = task.get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
         return songs;
     }
@@ -90,7 +90,7 @@ public class SongPicker extends ListActivity {
         return DEFAULT_SONG; // Returns the default song if URL safe song name cannot be created
     }
 
-    public void updateSongList(ArrayList<Song> songs) {
+    private void updateSongList(ArrayList<Song> songs) {
         songItemList.clear();
         if (songs != null && !songs.isEmpty()) {
             currentResults = songs;

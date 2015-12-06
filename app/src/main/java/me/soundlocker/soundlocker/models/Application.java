@@ -1,7 +1,7 @@
 package me.soundlocker.soundlocker.models;
 
 public class Application {
-    private String applicationName;
+    private final String applicationName;
     private int passwordLength;
 
     public Application(String applicationName, int passwordLength) {

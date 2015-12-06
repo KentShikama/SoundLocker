@@ -7,8 +7,6 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,12 +30,12 @@ public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
     private static final int SEARCH_RESULT_LIMIT = 7;
     private static final String TAG = "SongSearcher";
     private static final String SPOTIFY_API_SEARCH_ENDPOINT = "https://api.spotify.com/v1/search";
-    private final String ITEMS = "items";
-    private final String TRACKS = "tracks";
-    private final String TRACK_OBJECTS_NOT_FOUND = "Cannot find tracks object";
-    private final String CHECK_WIFI = "Please check your Wifi settings\n";
-    private final String NO_INTERNET = "No Internet Connection";
-    private final String OK = "Ok";
+    private static final String ITEMS = "items";
+    private static final String TRACKS = "tracks";
+    private static final String TRACK_OBJECTS_NOT_FOUND = "Cannot find tracks object";
+    private static final String CHECK_WIFI = "Please check your Wifi settings\n";
+    private static final String NO_INTERNET = "No Internet Connection";
+    private static final String OK = "Ok";
 
     private final Activity activity;
 
@@ -52,7 +50,8 @@ public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
         return songs;
     }
 
-    protected void onPostExecute(ArrayList<ImmutableTriple<String, URL, URL>> result) {
+    @Override
+    protected void onPostExecute(ArrayList<Song> result) {
         if (result == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle(NO_INTERNET);
@@ -80,7 +79,9 @@ public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
             Log.e(TAG, e.getMessage());
             return null;
         } finally {
-            urlConnection.disconnect();
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
         return songs;
     }
@@ -155,7 +156,7 @@ public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
         private final String PREVIEW_URL = "preview_url";
         private final int MAX_IMAGE_HEIGHT = 100;
 
-        private JsonReader reader;
+        private final JsonReader reader;
         private String songName;
         private URL previewUrl;
         private URL imageUrl;
@@ -181,26 +182,39 @@ public class SongSearcher extends AsyncTask<String, Integer, ArrayList<Song>> {
             reader.beginObject();
             while (reader.hasNext()) {
                 String symbol = reader.nextName();
-                if (symbol.equals(PREVIEW_URL)) {
-                    if (reader.peek() == JsonToken.STRING) {
-                        String previewUrlString = reader.nextString();
-                        previewUrl = new URL(previewUrlString);
-                    } else {
+                switch (symbol) {
+                    case PREVIEW_URL:
+                        readPreviewUrl();
+                        break;
+                    case NAME:
+                        readName();
+                        break;
+                    case ALBUM:
+                        readAlbum();
+                        break;
+                    default:
                         reader.skipValue();
-                    }
-                } else if (symbol.equals(NAME)) {
-                    if (reader.peek() == JsonToken.STRING) {
-                        songName = reader.nextString();
-                    } else {
-                        reader.skipValue();
-                    }
-                } else if (symbol.equals(ALBUM)) {
-                    readAlbum();
-                } else {
-                    reader.skipValue();
+                        break;
                 }
             }
             reader.endObject();
+        }
+
+        private void readPreviewUrl() throws IOException {
+            if (reader.peek() == JsonToken.STRING) {
+                String previewUrlString = reader.nextString();
+                previewUrl = new URL(previewUrlString);
+            } else {
+                reader.skipValue();
+            }
+        }
+
+        private void readName() throws IOException {
+            if (reader.peek() == JsonToken.STRING) {
+                songName = reader.nextString();
+            } else {
+                reader.skipValue();
+            }
         }
 
         private void readAlbum() throws IOException {

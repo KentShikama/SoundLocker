@@ -3,9 +3,9 @@ package me.soundlocker.soundlocker.models;
 import java.net.URL;
 
 public class Song {
-    private String songName;
-    private URL previewUrl;
-    private URL imageUrl;
+    private final String songName;
+    private final URL previewUrl;
+    private final URL imageUrl;
 
     public Song(String songName, URL previewUrl, URL imageUrl) {
         this.songName = songName;

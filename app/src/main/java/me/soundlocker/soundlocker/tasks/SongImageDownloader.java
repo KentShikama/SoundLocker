@@ -19,6 +19,9 @@ import javax.net.ssl.HttpsURLConnection;
 public class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
 
     private static final String TAG = "SongImageDownloader";
+    private static final String NO_INTERNET_TITLE = "No Internet Connection";
+    private static final String CHECK_WIFI_MESSAGE = "Please check your Wifi settings\n";
+    private static final String OK = "Ok";
     private final Activity activity;
 
     public SongImageDownloader(Activity activity) {
@@ -37,18 +40,21 @@ public class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         } finally {
-            urlConnection.disconnect();
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
         return null;
     }
 
-    protected void onPostExecute(Byte[] result) {
+    @Override
+    protected void onPostExecute(Drawable result) {
         if (result == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle("No Internet Connection");
+            builder.setTitle(NO_INTERNET_TITLE);
             builder.setIcon(android.R.drawable.ic_dialog_alert);
-            builder.setMessage("Please check your Wifi settings\n");
-            builder.setPositiveButton("Ok", null);
+            builder.setMessage(CHECK_WIFI_MESSAGE);
+            builder.setPositiveButton(OK, null);
             final AlertDialog alert = builder.create();
             activity.runOnUiThread(new java.lang.Runnable() {
                 public void run() {

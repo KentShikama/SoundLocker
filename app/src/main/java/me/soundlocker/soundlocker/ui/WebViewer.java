@@ -33,7 +33,7 @@ public class WebViewer extends Activity {
         WebView webview = buildWebView();
         final PreregisteredWebsite preregisteredWebsite = StorageWrapper.getWebsite(this.getApplicationContext(), websiteString);
         loadWebsiteIntoView(webview, preregisteredWebsite);
-        insertPassword(password, webview, preregisteredWebsite);
+        insertPasswordIntoWebsite(password, webview, preregisteredWebsite);
     }
 
     private void loadWebsiteIntoView(WebView webview, PreregisteredWebsite preregisteredWebsite) {
@@ -49,11 +49,12 @@ public class WebViewer extends Activity {
         return webview;
     }
 
-    private void insertPassword(final String password, WebView webview, final PreregisteredWebsite preregisteredWebsite) {
+    private void insertPasswordIntoWebsite(final String password, WebView webview, final PreregisteredWebsite preregisteredWebsite) {
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                view.evaluateJavascript(preregisteredWebsite.getPasswordFieldElement() + ".value = '" + password + "';", null);
+                String insertPasswordScript = preregisteredWebsite.getPasswordFieldElement() + ".value = '" + password + "';";
+                view.evaluateJavascript(insertPasswordScript, null);
             }
         });
     }

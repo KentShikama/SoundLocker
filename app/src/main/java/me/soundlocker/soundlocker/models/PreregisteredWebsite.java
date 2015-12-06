@@ -1,9 +1,9 @@
 package me.soundlocker.soundlocker.models;
 
 public class PreregisteredWebsite {
-    private String shortName;
-    private String loginUrl;
-    private String passwordFieldElement;
+    private final String shortName;
+    private final String loginUrl;
+    private final String passwordFieldElement;
 
     public PreregisteredWebsite(String shortName, String loginUrl, String passwordFieldElement) {
         this.shortName = shortName;

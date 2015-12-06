@@ -20,11 +20,8 @@ import me.soundlocker.soundlocker.ApplicationConstants;
 
 public class ApplicationsList extends ListActivity {
     private ArrayList<Application> applicationsList;
-    private ArrayList<String> applicationsNameList;
-    private ArrayAdapter<String> adapter;
-    private boolean firstBoot;
     private String masterId;
-    private SecureRandom random = new SecureRandom();
+    private final SecureRandom random = new SecureRandom();
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -33,17 +30,17 @@ public class ApplicationsList extends ListActivity {
         handleMasterId();
         styleActionButton();
         applicationsList = buildApplicationsList();
-        applicationsNameList = buildApplicationsNameList(applicationsList);
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
+        ArrayList<String> applicationsNameList = buildApplicationsNameList(applicationsList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, applicationsNameList);
         setListAdapter(adapter);
     }
 
     private void handleMasterId() {
-        firstBoot = StorageWrapper.getFirstBoot(this.getApplicationContext());
-        if (firstBoot == true) {
+        boolean firstBoot = StorageWrapper.getFirstBoot(this.getApplicationContext());
+        if (firstBoot) {
             masterId = new BigInteger(256, random).toString(32);
             StorageWrapper.saveMasterId(this.getApplicationContext(), masterId);
-            StorageWrapper.saveFirstBoot(this.getApplicationContext(), false);
+            StorageWrapper.saveBooted(this.getApplicationContext());
         } else {
             masterId = StorageWrapper.getMasterId(this.getApplicationContext());
         }
@@ -72,6 +69,9 @@ public class ApplicationsList extends ListActivity {
         return applicationNameList;
     }
 
+    /**
+     * addItems is called whenever the user clicks the '+' action button
+     */
     public void addItems(View v) {
         Intent intent = new Intent(this, ApplicationAdder.class);
         startActivity(intent);
