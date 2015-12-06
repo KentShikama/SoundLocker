@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -59,6 +61,13 @@ public class ApplicationsList extends ListActivity {
         goToPasswordScreen(applicationName);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
     private void handleMasterId() {
         boolean firstBoot = StorageWrapper.getFirstBoot(this.getApplicationContext());
         if (firstBoot) {
@@ -109,9 +118,10 @@ public class ApplicationsList extends ListActivity {
         startActivity(intent);
     }
 
-    public void modifyMasterId(View v) {
+    public void modifyMasterId(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Master Id");
+        builder.setTitle("View/Edit Master Id");
+        builder.setMessage("Warning: Any modifications to the Master ID will change your generated passwords");
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -125,8 +135,10 @@ public class ApplicationsList extends ListActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                masterId = input.getText().toString();
-                StorageWrapper.saveMasterId(appContext, masterId);
+                if (input.getText().toString() != "") {
+                    masterId = input.getText().toString();
+                    StorageWrapper.saveMasterId(appContext, masterId);
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
