@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import me.soundlocker.soundlocker.R;
 import me.soundlocker.soundlocker.StorageWrapper;
 import me.soundlocker.soundlocker.models.Application;
-import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.SoundLockerConstants;
 
 public class ApplicationsList extends ListActivity {
     private ArrayList<Application> applicationsList;
@@ -86,9 +86,9 @@ public class ApplicationsList extends ListActivity {
     private void goToPasswordScreen(String applicationName) {
         Intent intent = new Intent(this, PasswordGenerationSettings.class);
         boolean isPreregistered = StorageWrapper.isPreregistered(this.getApplicationContext(), applicationName);
-        intent.putExtra(ApplicationConstants.APP_NAME, applicationName);
-        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
-        intent.putExtra(ApplicationConstants.PREREGISTERED, isPreregistered);
+        intent.putExtra(SoundLockerConstants.APP_NAME, applicationName);
+        intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
+        intent.putExtra(SoundLockerConstants.PREREGISTERED, isPreregistered);
         startActivity(intent);
     }
 }

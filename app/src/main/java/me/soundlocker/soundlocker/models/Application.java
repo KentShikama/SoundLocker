@@ -1,8 +1,14 @@
 package me.soundlocker.soundlocker.models;
 
 public class Application {
+    private static final int DEFAULT_PASSWORD_LENGTH = 6;
+
     private final String applicationName;
     private int passwordLength;
+
+    public Application(String applicationName) {
+        this(applicationName, DEFAULT_PASSWORD_LENGTH);
+    }
 
     public Application(String applicationName, int passwordLength) {
         this.applicationName = applicationName;

@@ -16,7 +16,6 @@ import me.soundlocker.soundlocker.StorageWrapper;
 import me.soundlocker.soundlocker.models.Application;
 
 public class ApplicationAdder extends Activity {
-    private static final int DEFAULT_PASSWORD_LENGTH = 6;
     private final String FAILURE_MESSAGE = "Failed to Add App";
     private final String FAILURE_TO_ADD_APP_MESSAGE = "You already have this app added\n";
     private final String OK = "Ok";
@@ -32,11 +31,11 @@ public class ApplicationAdder extends Activity {
     }
 
     /**
-     * addApplication is called whenever the user clicks the 'Add Application' button
+     * saveApplication is called whenever the user clicks the 'Add Application' button
      */
     public void addApplication(View view) {
         String appName = getAppName();
-        boolean successful = StorageWrapper.addApplication(ApplicationAdder.this.getApplicationContext(), new Application(appName, DEFAULT_PASSWORD_LENGTH));
+        boolean successful = StorageWrapper.saveApplication(ApplicationAdder.this.getApplicationContext(), new Application(appName));
         if (successful) {
             Intent intent = new Intent(ApplicationAdder.this, ApplicationsList.class);
             startActivity(intent);

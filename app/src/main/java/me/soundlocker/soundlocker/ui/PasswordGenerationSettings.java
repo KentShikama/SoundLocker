@@ -9,13 +9,11 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import me.soundlocker.soundlocker.R;
-import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.SoundLockerConstants;
 import me.soundlocker.soundlocker.tasks.PasswordGenerator;
 import me.soundlocker.soundlocker.StorageWrapper;
 
 public class PasswordGenerationSettings extends Activity {
-    private static final String SONG_NAME = "song_name";
-    private static final String PREVIEW_URL = "preview_url";
     private static final int DEFAULT_PASSWORD_LENGTH = 10;
     private static final int MINIMUM_PASSWORD_LENGTH = 3;
     private static final int MAXIMUM_PASSWORD_LENGTH = 30;
@@ -45,13 +43,13 @@ public class PasswordGenerationSettings extends Activity {
         setTitle(intent);
         setSongName(intent);
         setPasswordLength();
-        previewUrl = intent.getStringExtra(PREVIEW_URL);
-        masterId = intent.getStringExtra(ApplicationConstants.MASTER_ID);
-        preregistered = intent.getBooleanExtra(ApplicationConstants.PREREGISTERED, false);
+        previewUrl = intent.getStringExtra(SoundLockerConstants.PREVIEW_URL);
+        masterId = intent.getStringExtra(SoundLockerConstants.MASTER_ID);
+        preregistered = intent.getBooleanExtra(SoundLockerConstants.PREREGISTERED, false);
     }
 
     private void setTitle(Intent intent) {
-        appName = intent.getStringExtra(ApplicationConstants.APP_NAME);
+        appName = intent.getStringExtra(SoundLockerConstants.APP_NAME);
         TextView title = (TextView) findViewById(R.id.applicationName);
         title.setText(appName);
     }
@@ -79,7 +77,7 @@ public class PasswordGenerationSettings extends Activity {
     }
 
     private void setSongName(Intent intent) {
-        songName = intent.getStringExtra(SONG_NAME);
+        songName = intent.getStringExtra(SoundLockerConstants.SONG_NAME);
         if (songName != null) {
             Button chooseSongButton = (Button) findViewById(R.id.chooseSong);
             chooseSongButton.setText(songName);
@@ -91,9 +89,9 @@ public class PasswordGenerationSettings extends Activity {
      */
     public void showSongPicker(View view) {
         Intent intent = new Intent(this, SongPicker.class);
-        intent.putExtra(ApplicationConstants.APP_NAME, appName);
-        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
-        intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
+        intent.putExtra(SoundLockerConstants.APP_NAME, appName);
+        intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
+        intent.putExtra(SoundLockerConstants.PREREGISTERED, preregistered);
         startActivity(intent);
     }
 
@@ -120,11 +118,11 @@ public class PasswordGenerationSettings extends Activity {
 
     private void showPasswordConfirmationScreen() {
         Intent intent = new Intent(this, GeneratedPasswordConfirmation.class);
-        intent.putExtra(ApplicationConstants.APP_NAME, appName);
-        intent.putExtra(ApplicationConstants.SONG_NAME, songName);
-        intent.putExtra(ApplicationConstants.PASSWORD, password);
-        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
-        intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
+        intent.putExtra(SoundLockerConstants.APP_NAME, appName);
+        intent.putExtra(SoundLockerConstants.SONG_NAME, songName);
+        intent.putExtra(SoundLockerConstants.PASSWORD, password);
+        intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
+        intent.putExtra(SoundLockerConstants.PREREGISTERED, preregistered);
         startActivity(intent);
     }
 

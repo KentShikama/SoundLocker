@@ -7,7 +7,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.SoundLockerConstants;
 import me.soundlocker.soundlocker.StorageWrapper;
 import me.soundlocker.soundlocker.models.PreregisteredWebsite;
 
@@ -24,8 +24,8 @@ public class WebViewer extends Activity {
 
     private void insertPasswordIntoWebsite() {
         Intent intent = getIntent();
-        final String websiteString = intent.getStringExtra(ApplicationConstants.WEBSITE);
-        final String password = intent.getStringExtra(ApplicationConstants.PASSWORD);
+        final String websiteString = intent.getStringExtra(SoundLockerConstants.PREREGISTERED_WEBSITE);
+        final String password = intent.getStringExtra(SoundLockerConstants.PASSWORD);
         insertPasswordIntoWebsiteAux(websiteString, password);
     }
 

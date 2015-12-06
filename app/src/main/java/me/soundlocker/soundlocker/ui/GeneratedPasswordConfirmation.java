@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import me.soundlocker.soundlocker.R;
-import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.SoundLockerConstants;
 
 public class GeneratedPasswordConfirmation extends Activity {
 
@@ -70,25 +70,25 @@ public class GeneratedPasswordConfirmation extends Activity {
         setTitle(intent);
         setPasswordField(intent);
         setPreregisteredAndFinalButton(intent);
-        songName = intent.getStringExtra(ApplicationConstants.SONG_NAME);
-        masterId = intent.getStringExtra(ApplicationConstants.MASTER_ID);
+        songName = intent.getStringExtra(SoundLockerConstants.SONG_NAME);
+        masterId = intent.getStringExtra(SoundLockerConstants.MASTER_ID);
     }
 
     private void setTitle(Intent intent) {
-        appName = intent.getStringExtra(ApplicationConstants.APP_NAME);
+        appName = intent.getStringExtra(SoundLockerConstants.APP_NAME);
         TextView title = (TextView) findViewById(R.id.applicationName);
         title.setText(appName);
     }
 
     private void setPasswordField(Intent intent) {
-        password = intent.getStringExtra(ApplicationConstants.PASSWORD);
+        password = intent.getStringExtra(SoundLockerConstants.PASSWORD);
         TextView passwordField = (TextView) findViewById(R.id.generatedPassword);
         passwordField.setText(password);
     }
 
     private void setPreregisteredAndFinalButton(Intent intent) {
         Button button = (Button) findViewById(R.id.insertPasswordOrCopyToClipboard);
-        preregistered = intent.getBooleanExtra(ApplicationConstants.PREREGISTERED, false);
+        preregistered = intent.getBooleanExtra(SoundLockerConstants.PREREGISTERED, false);
         if (preregistered) {
             button.setText(INSERT_PASSWORD_TO_WEBVIEW);
         } else {
@@ -98,8 +98,8 @@ public class GeneratedPasswordConfirmation extends Activity {
 
     private void insertPasswordToWebView() {
         Intent intent = new Intent(this, WebViewer.class);
-        intent.putExtra(ApplicationConstants.WEBSITE, appName);
-        intent.putExtra(ApplicationConstants.PASSWORD, password);
+        intent.putExtra(SoundLockerConstants.PREREGISTERED_WEBSITE, appName);
+        intent.putExtra(SoundLockerConstants.PASSWORD, password);
         startActivity(intent);
     }
 
@@ -117,10 +117,10 @@ public class GeneratedPasswordConfirmation extends Activity {
 
     private void goToPasswordScreen() {
         Intent intent = new Intent();
-        intent.putExtra(ApplicationConstants.APP_NAME, appName);
-        intent.putExtra(ApplicationConstants.SONG_NAME, songName);
-        intent.putExtra(ApplicationConstants.PREREGISTERED, preregistered);
-        intent.putExtra(ApplicationConstants.MASTER_ID, masterId);
+        intent.putExtra(SoundLockerConstants.APP_NAME, appName);
+        intent.putExtra(SoundLockerConstants.SONG_NAME, songName);
+        intent.putExtra(SoundLockerConstants.PREREGISTERED, preregistered);
+        intent.putExtra(SoundLockerConstants.MASTER_ID, masterId);
         setResult(RESULT_OK, intent);
         finish();
     }
