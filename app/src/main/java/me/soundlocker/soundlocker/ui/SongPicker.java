@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -22,8 +21,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import me.soundlocker.soundlocker.R;
 import me.soundlocker.soundlocker.ApplicationConstants;
+import me.soundlocker.soundlocker.R;
+import me.soundlocker.soundlocker.models.Song;
 import me.soundlocker.soundlocker.tasks.SongImageDownloader;
 import me.soundlocker.soundlocker.tasks.SongSearcher;
 
@@ -37,7 +37,7 @@ public class SongPicker extends ListActivity {
 
     private ArrayList<ImmutablePair<String, Drawable>> songItemList = new ArrayList<>();
     private SongItemAdapter songsAdapter;
-    private ArrayList<ImmutableTriple<String, URL, URL>> currentResults;
+    private ArrayList<Song> currentResults;
     private String appName;
     private String masterId;
     private boolean preregistered;
@@ -68,16 +68,16 @@ public class SongPicker extends ListActivity {
         songQueryEditor.addTextChangedListener(new SongQueryWatcher());
     }
 
-    private ArrayList<ImmutableTriple<String, URL, URL>> getSongUrls(SongSearcher task) {
-        ArrayList<ImmutableTriple<String, URL, URL>> urls = null;
+    private ArrayList<Song> getSongs(SongSearcher task) {
+        ArrayList<Song> songs = null;
         try {
-            urls = task.get();
+            songs = task.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return urls;
+        return songs;
     }
 
 
@@ -90,11 +90,11 @@ public class SongPicker extends ListActivity {
         return DEFAULT_SONG; // Returns the default song if URL safe song name cannot be created
     }
 
-    public void updateSongList(ArrayList<ImmutableTriple<String, URL, URL>> results) {
+    public void updateSongList(ArrayList<Song> songs) {
         songItemList.clear();
-        if (results != null && !results.isEmpty()) {
-            currentResults = results;
-            for (ImmutableTriple<String, URL, URL> song : results) {
+        if (songs != null && !songs.isEmpty()) {
+            currentResults = songs;
+            for (Song song : songs) {
                 ImmutablePair<String, Drawable> songItem = buildSongItem(song);
                 songItemList.add(songItem);
             }
@@ -102,9 +102,9 @@ public class SongPicker extends ListActivity {
         }
     }
 
-    private ImmutablePair<String, Drawable> buildSongItem(ImmutableTriple<String, URL, URL> song) {
-        String songName = song.getLeft();
-        URL imageUrl = song.getRight();
+    private ImmutablePair<String, Drawable> buildSongItem(Song song) {
+        String songName = song.getSongName();
+        URL imageUrl = song.getImageUrl();
         SongImageDownloader imageDownloader = new SongImageDownloader(this);
         imageDownloader.execute(imageUrl);
         Drawable drawable = buildDrawable(imageDownloader);
@@ -129,9 +129,9 @@ public class SongPicker extends ListActivity {
     }
 
     protected void onListItemClick(ListView list, View view, int position, long id) {
-        ImmutableTriple<String, URL, URL> song = currentResults.get(position);
-        String songName = song.getLeft();
-        String previewUrl = song.getMiddle().toString();
+        Song song = currentResults.get(position);
+        String songName = song.getSongName();
+        String previewUrl = song.getPreviewUrl().toString();
         goToPasswordScreen(songName, previewUrl);
     }
 
@@ -192,8 +192,8 @@ public class SongPicker extends ListActivity {
             String songName = buildURLSafeSongName(currentValue);
             SongSearcher task = new SongSearcher(SongPicker.this);
             task.execute(songName);
-            ArrayList<ImmutableTriple<String, URL, URL>> results = getSongUrls(task);
-            updateSongList(results);
+            ArrayList<Song> songs = getSongs(task);
+            updateSongList(songs);
         }
     }
 }

@@ -16,7 +16,7 @@ import me.soundlocker.soundlocker.ApplicationConstants;
 public class GeneratedPasswordConfirmation extends Activity {
 
     private static final String CLIPBOARD_LABEL = "label";
-    private final String INSERT_PASSWORD_TO_WEBVIEW = "Insert Password Into PreregisteredWebsite";
+    private final String INSERT_PASSWORD_TO_WEBVIEW = "Insert Password Into Website";
     private final String COPY_TO_CLIPBOARD = "Copy Password To Clipboard";
 
     private String appName;
