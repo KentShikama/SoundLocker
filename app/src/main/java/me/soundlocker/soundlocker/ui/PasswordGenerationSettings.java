@@ -119,8 +119,10 @@ public class PasswordGenerationSettings extends Activity {
     private void generatePassword() {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl, appName, masterId);
         String longPassword = generator.generatePassword();
-        int passwordLength = fetchPasswordLength();
-        password = longPassword.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength));
+        if (longPassword.isEmpty()) {
+            int passwordLength = fetchPasswordLength();
+            password = longPassword.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength));
+        }
     }
 
     private int fetchPasswordLength() {

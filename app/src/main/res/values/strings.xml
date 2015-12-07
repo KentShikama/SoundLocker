@@ -1,20 +1,14 @@
 <resources>
     <string name="app_name">SoundLocker</string>
-    <string name="siteName">Facebook.com</string>
     <string name="action_settings">Settings</string>
-
     <string name="generate">Generate Password</string>
     <string name="editMasterId">View/Edit Master ID</string>
     <string name="chooseSong">Choose Song</string>
     <string name="webview">Open WebView</string>
     <string name="title_activity_list_view">Applications List</string>
-
-
-
     <string name="title_application_adder">Add Applications</string>
     <string name="application_name">Application Name</string>
     <string name="add_application">Add Application</string>
-
     <string name="passwordLengthLabel">Password Length</string>
     <string name="successfulPasswordGeneration">Password Successfully Generated</string>
     <string name="passwordScreenInstructions">Choose the length of your password, choose your song, and then hit generate password. It is that simple!</string>
