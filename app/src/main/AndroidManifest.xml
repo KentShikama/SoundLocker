@@ -24,12 +24,13 @@
         <activity
             android:name=".ui.SongPicker"
             class=".SongPickerScreen"
-            android:label="@string/title_activity_list_view"
+            android:label="@string/app_name"
             android:parentActivityName=".ui.PasswordGenerationSettings"></activity>
         <activity
             android:name=".ui.ApplicationsList"
             class=".ApplicationsList"
-            android:label="@string/title_activity_list_view">
+            android:label="@string/app_name"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
