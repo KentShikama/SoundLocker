@@ -19,7 +19,7 @@ import me.soundlocker.soundlocker.ui.PasswordGenerationSettings;
  */
 public class PasswordGenerator {
     private static final String TAG = "PasswordGenerator";
-    private static final String BLANK_LINES = "--------------";
+    private static final String EMPTY = "";
     private static final String SHA_256 = "SHA-256";
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
@@ -38,7 +38,7 @@ public class PasswordGenerator {
     public String generatePassword() {
         URL url = buildURL();
         if (url == null) {
-            return BLANK_LINES;
+            return EMPTY;
         } else {
             return generatePasswordForNotNullURL(url);
         }
@@ -62,7 +62,7 @@ public class PasswordGenerator {
         task.execute(url);
         Byte[] songByteData = getSongByteData(task);
         if (songByteData == null) {
-            return BLANK_LINES;
+            return EMPTY;
         } else {
             String password = generatePasswordFromSongByteData(ArrayUtils.toPrimitive(songByteData));
             return password;
