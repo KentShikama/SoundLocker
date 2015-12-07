@@ -68,7 +68,9 @@ public class PasswordGenerationSettings extends Activity {
      */
     public void generatePasswordAndContinue(View view) {
         generatePassword();
-        showPasswordConfirmationScreen();
+        if (password != null && !password.isEmpty()) {
+            showPasswordConfirmationScreen();
+        }
     }
 
     private void setInitialValues(Intent intent) {
@@ -119,7 +121,7 @@ public class PasswordGenerationSettings extends Activity {
     private void generatePassword() {
         PasswordGenerator generator = new PasswordGenerator(this, previewUrl, appName, masterId);
         String longPassword = generator.generatePassword();
-        if (longPassword.isEmpty()) {
+        if (!longPassword.isEmpty()) {
             int passwordLength = fetchPasswordLength();
             password = longPassword.substring(0, Math.min(MAXIMUM_PASSWORD_LENGTH, passwordLength));
         }
