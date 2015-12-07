@@ -2,11 +2,14 @@ package me.soundlocker.soundlocker.tasks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -37,6 +40,8 @@ public class SongImageDownloader extends AsyncTask<URL, Integer, Drawable> {
             InputStream fileInputStreamOfImage = new BufferedInputStream(urlConnection.getInputStream());
             Drawable image = buildDrawableFromFileStreamOfImage(fileInputStreamOfImage);
             return image;
+        } catch (FileNotFoundException e) {
+            return new ColorDrawable(Color.TRANSPARENT); // Return transparent drawable if image file cannot be loaded
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         } finally {
