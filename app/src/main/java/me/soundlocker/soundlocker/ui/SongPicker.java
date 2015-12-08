@@ -115,8 +115,8 @@ public class SongPicker extends ListActivity {
     }
 
     private void updateSongList(ArrayList<Song> songs) {
-        songItemList.clear();
         if (songs != null && !songs.isEmpty()) {
+            songItemList.clear();
             currentResults = songs;
             for (Song song : songs) {
                 ImmutablePair<String, Drawable> songItem = buildSongItem(song);
